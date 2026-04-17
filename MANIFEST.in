@@ -1,0 +1,2 @@
+include data/repository.json
+recursive-include data *.json

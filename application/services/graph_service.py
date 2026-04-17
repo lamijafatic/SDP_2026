@@ -6,8 +6,13 @@ from domain.models.version import Version
 
 def parse_dep(dep_str):
     import re
-    match = re.match(r"([a-zA-Z0-9_]+)(.*)", dep_str)
-    return match.group(1), match.group(2)
+    # Package names can include letters, digits, hyphen, underscore, dot
+    match = re.match(r"([A-Za-z0-9][A-Za-z0-9_\-\.]*)(.*)", dep_str)
+    if not match:
+        return dep_str, ">=0"
+    name = match.group(1).strip()
+    constraint = match.group(2).strip()
+    return name, constraint if constraint else ">=0"
 
 
 class GraphService:

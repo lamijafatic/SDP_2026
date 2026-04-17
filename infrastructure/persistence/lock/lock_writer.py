@@ -8,5 +8,3 @@ def write_lock(solution, path="mypm.lock"):
 
     with open(path, "w") as f:
         json.dump(data, f, indent=2)
-
-    print(f"✔ Lock file written: {os.path.abspath(path)}")

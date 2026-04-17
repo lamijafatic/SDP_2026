@@ -1,8 +1,7 @@
 {
   "numpy": "2.3.0",
   "pandas": "2.3.3",
+  "scipy": "1.15.1",
   "matplotlib": "3.10.7",
-  "scikit-learn": "1.6.1",
-  "pillow": "11.3.0",
-  "scipy": "1.14.1"
+  "pillow": "11.3.0"
 }

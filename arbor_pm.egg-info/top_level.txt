@@ -1,0 +1,5 @@
+application
+cli
+core
+domain
+infrastructure

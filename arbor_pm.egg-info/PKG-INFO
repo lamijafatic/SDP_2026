@@ -1,0 +1,128 @@
+Metadata-Version: 2.4
+Name: arbor-pm
+Version: 0.1.0
+Summary: Python Package Manager with SAT-Based Dependency Resolution
+License: MIT
+Keywords: package-manager,dependency-resolution,SAT,pypi
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: python-sat>=0.1.8
+Requires-Dist: toml>=0.10
+Dynamic: requires-python
+
+
+
+## Overview
+
+Arbor is a command-line tool for managing Python dependencies.  
+It allows users to define packages, resolve compatible versions, and install them into an isolated environment.
+
+The main focus of the project is solving the dependency resolution problem in a structured way.
+
+---
+
+## Features
+
+- CLI tool  
+  Simple commands for usage: init, add, resolve, install  
+
+- Dependency management  
+  Users define packages and version constraints  
+
+- Constraint handling  
+  Supports version rules such as >=, <=, <, >, ==  
+
+- Dependency graph  
+  Packages and their relationships are modeled as a graph  
+
+- Dependency resolution  
+  Finds a set of versions that are compatible with each other  
+
+- Lock file  
+  Stores exact versions for reproducibility  
+
+- Virtual environment  
+  Creates an isolated Python environment  
+
+- Real installation  
+  Packages are actually installed using pip  
+
+---
+
+## How It Works
+
+1. The user adds dependencies with version constraints  
+2. The system collects available versions for each package  
+3. A dependency graph is built  
+4. Invalid versions are filtered out  
+5. A compatible set of versions is selected  
+6. The result is written to a lock file  
+7. Packages are installed into a virtual environment  
+
+---
+
+## Dependency Resolution Logic
+
+The dependency resolution problem is modeled using a formal mathematical approach based on hypergraphs.
+
+In this model:
+
+- Packages and their versions are represented as nodes  
+- Dependencies are represented as relationships between sets of nodes (hyperedges)  
+- Constraints define which combinations of versions are valid or invalid  
+
+This allows the dependency system to be described as a set of logical conditions over package-version combinations.
+
+The model is then transformed into a Boolean formulation, where:
+
+- Each (package, version) pair is represented as a variable  
+- Constraints are translated into logical expressions  
+- Invalid combinations are explicitly forbidden  
+
+This formulation is converted into a satisfiability problem, which allows the system to efficiently determine whether a valid set of versions exists.
+
+In the implementation:
+
+- The mathematical model is translated into code  
+- Logical constraints are constructed programmatically  
+- A SAT solver is used to compute a valid assignment of versions  
+
+The solver efficiently explores the solution space and returns a combination of package versions that satisfies all constraints.
+
+This approach avoids naive search and enables handling more complex dependency structures in a structured and scalable way.
+
+
+
+## Current State
+
+The system currently supports:
+
+- adding dependencies  
+- modeling dependency relationships  
+- resolving compatible versions  
+- generating a lock file  
+- installing real packages  
+- CLI usage  
+
+
+---
+
+## Things to be Done
+
+- Replace the static JSON repository with a dynamic system that retrieves versions  
+
+- Automatically select the latest compatible versions  
+
+- Compare this approach with traditional search algorithms (backtracking / DFS) and analyze performance  
+
+- Evaluate how the graph-based approach reduces unnecessary combinations  
+
+- Add more CLI commands   
+
+- Improve automation and developer experience  
+
+- Handle differences between package names and distribution names  
+
+- Add support for Python version and platform constraints  
+
+- Improve error handling and user feedback  
