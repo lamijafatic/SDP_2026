@@ -30,13 +30,19 @@ def run(args):
 
     svc.create_project(name, python_version=python_ver, description=description)
 
+
+
     print(ok(f"Project {bold(name)} initialized"))
     print(ok(f"Configuration file created: {bold('mypm.toml')}"))
-    print(ok(f"Project directory created: {bold('.mypm/')}"))
+    print(ok("Project structure created"))
+    print(ok(f"Virtual environment: {bold('.venv/')}"))
+    print(ok(f"Source: {bold('src/')}  |  Tests: {bold('tests/')}"))
     print()
+
     print(c("  Next steps:", DIM))
+    print(c(f"    source .venv/bin/activate   — activate virtual environment", DIM))
     print(c(f"    arbor add numpy '>=1.20'   — add a dependency", DIM))
     print(c(f"    arbor resolve              — resolve all constraints", DIM))
-    print(c(f"    arbor install              — install to virtual environment", DIM))
+    print(c(f"    arbor install              — install dependencies", DIM))
     print()
     return 0
