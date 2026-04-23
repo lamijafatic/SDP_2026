@@ -5,3 +5,5 @@ python = "3.13"
 description = ""
 
 [dependencies]
+requests = ">=2.33.1"
+numpy = ">=2.3.0"
