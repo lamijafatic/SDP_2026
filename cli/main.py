@@ -8,6 +8,7 @@ from cli.commands.project.init import run as init_cmd
 from cli.commands.project.info import run as info_cmd
 from cli.commands.project.doctor import run as doctor_cmd
 from cli.commands.project.status import run as status_cmd
+from cli.commands.project.import_cmd import run as import_cmd
 
 # Dependency commands
 from cli.commands.dependency.add import run as add_cmd
@@ -37,6 +38,12 @@ from cli.commands.debug.graph import run as graph_cmd
 from cli.commands.debug.trace import run as trace_cmd
 from cli.commands.debug.dump import run as dump_cmd
 
+# Bot commands
+from cli.commands.bot.setup import run as bot_setup_cmd
+from cli.commands.bot.check import run as bot_check_cmd
+from cli.commands.bot.run import run as bot_run_cmd
+from cli.commands.bot.config_cmd import run as bot_config_cmd
+
 
 COMMANDS = {
     # project
@@ -44,6 +51,7 @@ COMMANDS = {
     "info": info_cmd,
     "doctor": doctor_cmd,
     "status": status_cmd,
+    "import": import_cmd,
     # dependency
     "add": add_cmd,
     "remove": remove_cmd,
@@ -67,6 +75,11 @@ COMMANDS = {
     "graph": graph_cmd,
     "trace": trace_cmd,
     "dump": dump_cmd,
+    # bot
+    "bot-setup": bot_setup_cmd,
+    "bot-check": bot_check_cmd,
+    "bot-run": bot_run_cmd,
+    "bot-config": bot_config_cmd,
 }
 
 
@@ -79,12 +92,13 @@ def main():
             banner()
             print(c("  Usage: arbor <command> [options]", DIM))
             print()
-            print(c("  Project:      init, info, status, doctor", DIM))
+            print(c("  Project:      init, info, status, doctor, import", DIM))
             print(c("  Dependencies: add, remove, show, update", DIM))
             print(c("  Resolution:   resolve, lock, explain, conflicts", DIM))
             print(c("  Environment:  install, sync, clean, build", DIM))
             print(c("  Registry:     search, versions, list", DIM))
             print(c("  Debug:        graph, trace, dump", DIM))
+            print(c("  Bot:          bot-setup, bot-check, bot-run, bot-config", DIM))
             print()
             print(c("  Run 'arbor --help' for full documentation.", DIM))
             return 0

@@ -1,4 +1,5 @@
 MANIFEST.in
+README.md
 pyproject.toml
 readme.md
 setup.py
@@ -7,9 +8,12 @@ application/dto/resolution_result.py
 application/services/dependecy_service.py
 application/services/environment_service.py
 application/services/graph_service.py
+application/services/import_service.py
 application/services/lock_service.py
+application/services/pr_bot_service.py
 application/services/project_service.py
 application/services/resolution_service.py
+application/services/update_checker_service.py
 application/use_cases/add_dependency.py
 application/use_cases/generate_lockfile.py
 application/use_cases/install_environment.py
@@ -23,6 +27,11 @@ arbor_pm.egg-info/top_level.txt
 cli/context.py
 cli/main.py
 cli/parser.py
+cli/commands/bot/__init__.py
+cli/commands/bot/check.py
+cli/commands/bot/config_cmd.py
+cli/commands/bot/run.py
+cli/commands/bot/setup.py
 cli/commands/debug/dump.py
 cli/commands/debug/graph.py
 cli/commands/debug/trace.py
@@ -39,6 +48,7 @@ cli/commands/package/list_pkgs.py
 cli/commands/package/search.py
 cli/commands/package/versions.py
 cli/commands/project/doctor.py
+cli/commands/project/import_cmd.py
 cli/commands/project/info.py
 cli/commands/project/init.py
 cli/commands/project/status.py
@@ -53,6 +63,7 @@ core/utils/constraint_parser.py
 core/utils/graph_utils.py
 core/utils/hashing.py
 core/utils/version_parser.py
+data/__init__.py
 data/repository.json
 domain/exceptions/conflict_error.py
 domain/exceptions/resolution_error.py
@@ -63,6 +74,7 @@ domain/models/edge.py
 domain/models/graph.py
 domain/models/node.py
 domain/models/package.py
+domain/models/update_result.py
 domain/models/version.py
 domain/resolver/backtracking_resolver.py
 domain/resolver/base_resolver.py
@@ -76,6 +88,11 @@ domain/specification/dpendency_spec.py
 infrastructure/environment/activation.py
 infrastructure/environment/path_manager.py
 infrastructure/environment/venv_manager.py
+infrastructure/git/__init__.py
+infrastructure/git/git_client.py
+infrastructure/github/__init__.py
+infrastructure/github/changelog_fetcher.py
+infrastructure/github/github_client.py
 infrastructure/installer/environment_builder.py
 infrastructure/installer/installer.py
 infrastructure/installer/wheel.installer.py

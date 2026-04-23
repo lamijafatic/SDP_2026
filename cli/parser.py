@@ -33,6 +33,17 @@ def parse_args():
 
     sub.add_parser("doctor", help="Run a health check on the project")
 
+    p_import = sub.add_parser(
+        "import",
+        help="Import dependencies from an existing project (requirements.txt, pyproject.toml, etc.)",
+    )
+    p_import.add_argument(
+        "path",
+        nargs="?",
+        default=".",
+        help="Path to project directory (default: current directory)",
+    )
+
     # ── Dependency ───────────────────────────────────────────
     p_add = sub.add_parser("add", help="Add a dependency")
     p_add.add_argument("package", help="Package name")
@@ -88,5 +99,41 @@ def parse_args():
     sub.add_parser("trace", help="Trace the resolution process step-by-step")
 
     sub.add_parser("dump", help="Dump internal project state as JSON")
+
+    # ── Bot ──────────────────────────────────────────────────
+    sub.add_parser(
+        "bot-setup",
+        help="Interactive wizard to configure the PR bot (start here)",
+    )
+
+    sub.add_parser(
+        "bot-check",
+        help="Check for available dependency updates (no PRs created)",
+    )
+
+    p_bot_run = sub.add_parser(
+        "bot-run",
+        help="Create GitHub PRs for dependency updates",
+    )
+    p_bot_run.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Show what would happen without pushing or creating PRs",
+    )
+
+    p_bot_cfg = sub.add_parser(
+        "bot-config",
+        help="Show or initialise bot configuration in mypm.toml",
+    )
+    p_bot_cfg.add_argument(
+        "--init",
+        action="store_true",
+        help="Add default [bot] section to mypm.toml if not present",
+    )
+    p_bot_cfg.add_argument(
+        "--show",
+        action="store_true",
+        help="Show current bot configuration (default behaviour)",
+    )
 
     return parser.parse_args()

@@ -1,5 +1,6 @@
 application
 cli
 core
+data
 domain
 infrastructure
