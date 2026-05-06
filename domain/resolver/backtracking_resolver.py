@@ -32,22 +32,30 @@ class BacktrackingResolver(BaseResolver):
         return False
 
     def _is_valid(self, pkg, version):
-        # Check explicit conflicts from repo
+        from domain.models.version import Version as _Version
+        ver_obj = version if isinstance(version, _Version) else _Version(str(version))
+        version_str = str(version)
+
+        # 1. Explicit conflicts from repo
         if hasattr(self.graph, "repo"):
             conflicts = self.graph.repo.get_conflicts()
-            for c in conflicts:
-                p1, p2 = c
+            for p1, p2 in conflicts:
                 cp1, cv1 = p1.split("@")
                 cp2, cv2 = p2.split("@")
                 sel = self.solution
-                if pkg == cp1 and str(version) == cv1 and cp2 in sel and str(sel[cp2]) == cv2:
+                if pkg == cp1 and version_str == cv1 and cp2 in sel and str(sel[cp2]) == cv2:
                     return False
-                if pkg == cp2 and str(version) == cv2 and cp1 in sel and str(sel[cp1]) == cv1:
+                if pkg == cp2 and version_str == cv2 and cp1 in sel and str(sel[cp1]) == cv1:
                     return False
 
-        # Check dependency constraints against current solution
-        deps = self.graph.get_dependencies(pkg, version)
-        for dep_name, constraint in deps:
+        # 2. Backward: constraints already-assigned packages impose ON this package
+        for sel_name, sel_ver in self.solution.items():
+            for dep_name, constraint in self.graph.get_dependencies(sel_name, sel_ver):
+                if dep_name == pkg and not constraint.is_satisfied_by(ver_obj):
+                    return False
+
+        # 3. Forward: constraints this package imposes ON others
+        for dep_name, constraint in self.graph.get_dependencies(pkg, version):
             if dep_name in self.solution:
                 if not constraint.is_satisfied_by(self.solution[dep_name]):
                     return False

@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python test_hypergraph.py)",
+      "Bash(python -c \"import arbor\")",
+      "Bash(python main.py --version)",
+      "Bash(python -m arbor --version)",
+      "Bash(python cli/main.py resolve --strategy hypergraph)",
+      "Bash(python cli/main.py resolve --strategy sat)",
+      "Bash(python -c ' *)",
+      "Bash(python benchmark.py --runs 3)",
+      "Bash(python benchmark.py --runs 5)",
+      "Bash(python benchmark.py --runs 10)",
+      "Bash(python benchmark.py --mode diamond --runs 5)",
+      "Bash(python benchmark.py --mode synthetic --runs 5)",
+      "Bash(python benchmark.py --mode diamond --runs 3)",
+      "Bash(python benchmark.py --mode all --runs 10)"
+    ]
+  }
+}

@@ -61,7 +61,7 @@ def parse_args():
     p_resolve = sub.add_parser("resolve", help="Resolve dependencies using SAT solver")
     p_resolve.add_argument(
         "--strategy",
-        choices=["sat", "backtracking"],
+        choices=["sat", "backtracking", "hypergraph"],
         default="sat",
         help="Resolution algorithm (default: sat)",
     )

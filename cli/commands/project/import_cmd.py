@@ -14,10 +14,11 @@ def run(args):
 
     imp = ImportService()
 
-    # ── 1. Detect files ──────────────────────────────────────────────────────
+    # ── 1. Detect constraint files ───────────────────────────────────────────
     found = imp.detect(directory)
+    found_pinned = imp.detect_pinned(directory)
 
-    if not found:
+    if not found and not found_pinned:
         print(warn("No supported dependency files found in this directory."))
         print()
         print(c("  Supported files:", DIM))
@@ -25,12 +26,7 @@ def run(args):
             print(c(f"    {name}", DIM))
         return 1
 
-    print(info("  Found the following dependency files:"))
-    for filename, path, _ in found:
-        print(c(f"    {filename}", DIM))
-    print()
-
-    # ── 2. Parse each file ───────────────────────────────────────────────────
+    # ── 2. Parse constraint files ────────────────────────────────────────────
     all_deps = {}
     parse_results = []
 
@@ -43,39 +39,75 @@ def run(args):
             parse_results.append((filename, {}, str(e)))
             print(warn(f"  Could not parse {filename}: {e}"))
 
+    # ── 3. Handle pinned version sources ────────────────────────────────────
+    pinned_deps = {}
+    if found_pinned:
+        print(info("  Found pinned-version files (lockfile / pip freeze):"))
+        for filename, path, _ in found_pinned:
+            print(c(f"    {filename}", DIM))
+        print()
+        print(c("  These contain exact installed versions. How should they be used?", DIM))
+        print(c("  [1] Keep exact  — import as ==version (re-resolve will use exact pins)", DIM))
+        print(c("  [2] Use as floor — import as >=version (allows newer versions)", DIM))
+        print(c("  [3] Ignore        — skip pinned files, use constraint files only", DIM))
+        print()
+        pin_choice = input("  Choice [1/2/3]: ").strip()
+
+        if pin_choice in ("1", "2"):
+            for filename, path, method in found_pinned:
+                try:
+                    parsed = getattr(imp, method)(path)
+                    pinned_deps.update(parsed)
+                except Exception as e:
+                    print(warn(f"  Could not parse {filename}: {e}"))
+
+            if pin_choice == "2":
+                pinned_deps = imp.pinned_to_constraints(pinned_deps)
+
+            # Pinned versions fill in packages not covered by constraint files
+            for pkg, spec in pinned_deps.items():
+                if pkg not in all_deps:
+                    all_deps[pkg] = spec
+
+            if pinned_deps:
+                print()
+                print(info(f"  Added {len(pinned_deps)} pinned package(s) as constraints."))
+        print()
+
     if not all_deps:
         print(err("No dependencies could be parsed from the detected files."))
         return 1
 
-    # ── 3. Show what was found ───────────────────────────────────────────────
+    # ── 4. Show combined result ──────────────────────────────────────────────
     rows = []
-    for filename, parsed, error in parse_results:
-        if parsed:
-            for pkg, constraint in parsed.items():
-                rows.append([pkg, constraint, filename])
-        elif error:
-            rows.append(["(parse error)", "-", filename])
+    for pkg, constraint in sorted(all_deps.items()):
+        source = "pinned" if pkg in pinned_deps and pkg not in {
+            p for _, parsed, _ in parse_results for p in (parsed or {})
+        } else "constraint"
+        rows.append([pkg, constraint, source])
 
-    print(info(f"  Found {len(all_deps)} dependencies:"))
+    print(info(f"  Total: {len(all_deps)} dependencies to import"))
     print()
     table(["Package", "Constraint", "Source"], rows)
     print()
 
-    # ── 4. Handle existing mypm.toml ────────────────────────────────────────
-    svc = ProjectService()
+    # ── 5. Handle existing mypm.toml ────────────────────────────────────────
     toml_path = os.path.join(directory, "mypm.toml")
 
     if os.path.exists(toml_path):
+        old_dir = os.getcwd()
+        os.chdir(directory)
         config = load_config()
+        os.chdir(old_dir)
         existing_deps = config.get("dependencies", {})
 
         if existing_deps:
             print(warn(f"  mypm.toml already has {len(existing_deps)} dependency/ies."))
             print()
             print(c("  How should existing entries be handled?", DIM))
-            print(c("  [1] Merge  - keep existing, add new ones (existing constraints win)", DIM))
-            print(c("  [2] Update - keep existing, add new ones (imported constraints win)", DIM))
-            print(c("  [3] Replace - overwrite everything with imported deps", DIM))
+            print(c("  [1] Merge   — keep existing constraints, add new ones (existing wins)", DIM))
+            print(c("  [2] Update  — keep existing packages, imported constraints win", DIM))
+            print(c("  [3] Replace — overwrite everything with imported deps", DIM))
             print(c("  [4] Cancel", DIM))
             print()
 
@@ -85,9 +117,9 @@ def run(args):
                 print(warn("  Import cancelled."))
                 return 0
             elif choice == "1":
-                merged = {**all_deps, **existing_deps}  # existing wins
+                merged = {**all_deps, **existing_deps}
             elif choice == "2":
-                merged = {**existing_deps, **all_deps}  # imported wins
+                merged = {**existing_deps, **all_deps}
             elif choice == "3":
                 merged = all_deps
             else:
@@ -95,12 +127,17 @@ def run(args):
                 return 1
 
             config["dependencies"] = merged
+            old_dir = os.getcwd()
+            os.chdir(directory)
             save_config(config)
+            os.chdir(old_dir)
         else:
             config["dependencies"] = all_deps
+            old_dir = os.getcwd()
+            os.chdir(directory)
             save_config(config)
+            os.chdir(old_dir)
     else:
-        # No mypm.toml yet - create one
         print(info("  No mypm.toml found, creating one."))
         project_name = os.path.basename(directory)
         config = {
@@ -117,14 +154,15 @@ def run(args):
         save_config(config)
         os.chdir(old_dir)
 
-    # ── 5. Summary ───────────────────────────────────────────────────────────
+    # ── 6. Summary ───────────────────────────────────────────────────────────
     divider()
     print()
     print(ok(f"  Imported {len(all_deps)} dependencies into mypm.toml."))
     print()
     print(c("  Next steps:", DIM))
-    print(c("    arbor resolve      generate lock file", DIM))
-    print(c("    arbor install      install packages into venv", DIM))
-    print(c("    arbor bot-setup    configure automated PR bot", DIM))
+    print(c("    arbor resolve               re-resolve with imported constraints", DIM))
+    print(c("    arbor resolve --strategy hypergraph   use hypergraph resolver", DIM))
+    print(c("    arbor install               install packages into venv", DIM))
+    print(c("    arbor bot-setup             configure automated PR bot", DIM))
     print()
     return 0

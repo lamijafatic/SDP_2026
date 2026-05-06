@@ -3,6 +3,7 @@ from infrastructure.repository.smart_repo import SmartRepository
 from application.services.graph_service import GraphService
 from domain.resolver.sat_resolver import SATResolver
 from domain.resolver.backtracking_resolver import BacktrackingResolver
+from domain.resolver.hypergraph_resolver import HypergraphResolver
 from application.dto.resolution_result import ResolutionResult
 
 
@@ -18,6 +19,8 @@ class ResolutionService:
 
         if strategy == "backtracking":
             resolver = BacktrackingResolver(graph)
+        elif strategy == "hypergraph":
+            resolver = HypergraphResolver(graph)
         else:
             resolver = SATResolver(graph)
 

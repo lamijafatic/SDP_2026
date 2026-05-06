@@ -1,6 +1,7 @@
 import os
 import re
 import ast
+import json
 from typing import Dict, List, Tuple, Optional
 
 
@@ -19,14 +20,54 @@ class ImportService:
         ("Pipfile",           "_parse_pipfile"),
     ]
 
-    def detect(self, directory: str = ".") -> List[Tuple[str, str]]:
-        """Return list of (filename, parser_method) for files found in directory."""
+    # Files that contain already-pinned versions (== exact)
+    PINNED_SOURCES = [
+        ("mypm.lock",          "_parse_lockfile_json"),
+        ("pip-freeze.txt",     "_parse_pip_freeze"),
+        ("requirements.lock",  "_parse_pip_freeze"),
+        ("constraints.txt",    "_parse_pip_freeze"),
+    ]
+
+    def detect(self, directory: str = ".") -> List[Tuple[str, str, str]]:
+        """Return list of (filename, path, parser_method) for constraint files found."""
         found = []
         for filename, method in self.SUPPORTED:
             path = os.path.join(directory, filename)
             if os.path.exists(path):
                 found.append((filename, path, method))
         return found
+
+    def detect_pinned(self, directory: str = ".") -> List[Tuple[str, str, str]]:
+        """Return list of (filename, path, parser_method) for pinned-version files found."""
+        found = []
+        for filename, method in self.PINNED_SOURCES:
+            path = os.path.join(directory, filename)
+            if os.path.exists(path):
+                found.append((filename, path, method))
+
+        # Also detect pip-freeze-style requirements.txt (all lines are pkg==version)
+        req_path = os.path.join(directory, "requirements.txt")
+        if os.path.exists(req_path) and self._looks_like_freeze(req_path):
+            # Only add if not already in SUPPORTED results (avoid duplicate)
+            found.append(("requirements.txt (pinned)", req_path, "_parse_pip_freeze"))
+
+        return found
+
+    def _looks_like_freeze(self, path: str) -> bool:
+        """Return True if >=80% of dep lines use the == operator (pip freeze style)."""
+        total, pinned = 0, 0
+        try:
+            with open(path, encoding="utf-8", errors="ignore") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line or line.startswith("#") or line.startswith("-"):
+                        continue
+                    total += 1
+                    if "==" in line:
+                        pinned += 1
+        except OSError:
+            return False
+        return total > 0 and (pinned / total) >= 0.8
 
     def parse_file(self, path: str) -> Dict[str, str]:
         """Auto-detect file type and parse it."""
@@ -166,6 +207,47 @@ class ImportService:
         if not spec:
             spec = ">=0.1"
         return name, spec
+
+    def _parse_pip_freeze(self, path: str) -> Dict[str, str]:
+        """Parse pip freeze output or pinned requirements (pkg==1.2.3 lines)."""
+        deps: Dict[str, str] = {}
+        with open(path, encoding="utf-8", errors="ignore") as f:
+            for raw in f:
+                line = raw.strip()
+                if not line or line.startswith("#") or line.startswith("-"):
+                    continue
+                line = line.split("#")[0].strip().split(";")[0].strip()
+                name, constraint = self._split_dep(line)
+                if name:
+                    deps[self._normalize(name)] = constraint
+        return deps
+
+    def _parse_lockfile_json(self, path: str) -> Dict[str, str]:
+        """Parse mypm.lock JSON: {pkg: version_str} → {pkg: ==version_str}."""
+        try:
+            with open(path, encoding="utf-8") as f:
+                data = json.load(f)
+            return {
+                self._normalize(pkg): f"=={ver}"
+                for pkg, ver in data.items()
+                if isinstance(ver, str)
+            }
+        except Exception:
+            return {}
+
+    def pinned_to_constraints(self, pinned: Dict[str, str]) -> Dict[str, str]:
+        """
+        Convert a pinned {pkg: ==ver} dict to loose {pkg: >=ver} constraints
+        suitable for re-resolution (keeps existing versions as minimum).
+        """
+        result = {}
+        for pkg, spec in pinned.items():
+            if spec.startswith("=="):
+                ver = spec[2:]
+                result[pkg] = f">={ver}"
+            else:
+                result[pkg] = spec
+        return result
 
     def _normalize(self, name: str) -> str:
         return name.lower().replace("_", "-")
