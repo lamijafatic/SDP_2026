@@ -168,11 +168,10 @@ nav {
 }
 .hero h1 {
   font-size: clamp(3rem, 5vw, 4.5rem);
-  color: var(--hero-text);
+  color: var(--accent-light);
   margin-bottom: 16px;
   font-weight: normal;
 }
-.hero h1 span { color: var(--accent-light); }
 .hero-sub {
   font-size: 1.125rem;
   color: var(--hero-muted);
@@ -273,30 +272,42 @@ section:nth-child(even) { background: var(--bg-alt); }
   margin-bottom: 56px;
 }
 
-/* ── about cards ─────────────────────────────────────── */
-.about-grid {
+/* about layout: description + command table */
+.about-layout {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 56px;
+  align-items: start;
 }
-.about-card {
+.cmd-table-wrap {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 32px;
   box-shadow: var(--shadow);
+  overflow: hidden;
 }
-.about-icon {
-  font-size: 1.5rem;
-  margin-bottom: 16px;
-  display: block;
+.cmd-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+.cmd-table th {
+  text-align: left;
+  font-size: .7rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-hi);
 }
-.about-card h3 {
-  font-size: 1.1rem;
-  margin-bottom: 10px;
-  color: var(--text);
+.cmd-table td {
+  padding: 7px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
 }
-.about-card p { font-size: .9rem; color: var(--text-muted); }
+.cmd-table tr:last-child td { border-bottom: none; }
+.cmd-table td:first-child {
+  font-family: "IBM Plex Mono", monospace;
+  color: var(--accent);
+  white-space: nowrap;
+}
 
 /* ── algorithm ───────────────────────────────────────── */
 .algo-layout {
@@ -527,7 +538,7 @@ footer {
   .hero { grid-template-columns: 1fr; }
   .hero-canvas-wrap { display: none; }
   .hero-content { padding: 80px 0 60px; max-width: 100%; }
-  .about-grid { grid-template-columns: 1fr; }
+  .about-layout { grid-template-columns: 1fr; }
   .stats-grid { grid-template-columns: 1fr; }
   .stat-item { border-right: none; border-bottom: 1px solid var(--border); padding: 24px 0; }
   .stat-item:last-child { border-bottom: none; }
@@ -555,7 +566,7 @@ footer {
 <section class="hero">
   <div class="hero-content container" style="max-width:560px; padding-left:max(32px, calc((100vw - 1100px)/2 + 32px))">
     <div class="hero-eyebrow">Python Package Manager</div>
-    <h1>Ver<span>tex</span></h1>
+    <h1>Vertex</h1>
     <p class="hero-sub">
       Dependency resolution modeled as a hypergraph. Fast, conflict aware, no exponential backtracking.
     </p>
@@ -571,9 +582,41 @@ footer {
 <!-- ABOUT -->
 <section id="about">
   <div class="container">
-    <p class="section-lead" style="max-width:720px; font-size:1.15rem;">
-      Vertex is a command line package manager for Python. It resolves dependencies, locks versions, manages a virtual environment, and checks for updates. It has 22 commands covering project setup, dependency management, resolution, environment installs, and registry search. At its core is a hypergraph based resolution algorithm: packages and versions become nodes, constraints become hyperedges, and versions sharing the same constraints are grouped into role classes before a SAT solver picks a valid assignment. This avoids the exponential blowup that plain backtracking runs into on conflicting dependencies, so resolution stays fast even on large, tangled dependency trees.
-    </p>
+    <div class="about-layout">
+      <p class="section-lead" style="max-width:none; font-size:1.15rem; margin-bottom:0;">
+        Vertex is a command line package manager for Python. It resolves dependencies, locks versions, manages a virtual environment, and checks for updates. It has 23 commands covering project setup, dependency management, resolution, environment installs, and registry search. At its core is a hypergraph based resolution algorithm: packages and versions become nodes, constraints become hyperedges, and versions sharing the same constraints are grouped into role classes before a SAT solver picks a valid assignment. This avoids the exponential blowup that plain backtracking runs into on conflicting dependencies, so resolution stays fast even on large, tangled dependency trees.
+      </p>
+      <div class="cmd-table-wrap">
+        <table class="cmd-table">
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td>init</td><td>Create a new project</td></tr>
+            <tr><td>info</td><td>Show project details</td></tr>
+            <tr><td>status</td><td>Show project and environment health</td></tr>
+            <tr><td>doctor</td><td>Check the project for common problems</td></tr>
+            <tr><td>import</td><td>Import dependencies from an existing project</td></tr>
+            <tr><td>add</td><td>Add a dependency</td></tr>
+            <tr><td>remove</td><td>Remove a dependency</td></tr>
+            <tr><td>show</td><td>List declared dependencies</td></tr>
+            <tr><td>update</td><td>Update a dependency to the latest compatible version</td></tr>
+            <tr><td>resolve</td><td>Resolve dependencies and write the lock file</td></tr>
+            <tr><td>lock</td><td>Regenerate the lock file</td></tr>
+            <tr><td>explain</td><td>Show why each version was chosen</td></tr>
+            <tr><td>conflicts</td><td>List known package conflicts</td></tr>
+            <tr><td>install</td><td>Install packages from the lock file</td></tr>
+            <tr><td>sync</td><td>Sync the virtual environment with the lock file</td></tr>
+            <tr><td>clean</td><td>Remove the virtual environment</td></tr>
+            <tr><td>build</td><td>Build a distribution package</td></tr>
+            <tr><td>search</td><td>Search the package registry</td></tr>
+            <tr><td>versions</td><td>List versions available for a package</td></tr>
+            <tr><td>list</td><td>List every package in the registry</td></tr>
+            <tr><td>graph</td><td>Visualize the dependency graph</td></tr>
+            <tr><td>trace</td><td>Step through the resolution process</td></tr>
+            <tr><td>dump</td><td>Dump the project state as JSON</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </section>
 
