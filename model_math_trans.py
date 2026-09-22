@@ -516,6 +516,29 @@ def _is_version_valid(
     return True
 
 
+def _dependency_neighbors(H: HyperGraph) -> dict:
+    """
+    Static undirected neighbor map: for each package name, every other
+    package name it shares a dependency or conflict hyperedge with, at any
+    version. A conservative, version independent over approximation of
+    which packages a given package's validity check can actually depend on.
+
+    Used by phase_b_select to identify, for every package, which earlier
+    packages its outcome can actually depend on — and, symmetrically,
+    which earlier packages are irrelevant to it and to everything after it.
+    """
+    neighbors: dict = defaultdict(set)
+    for e in H.E:
+        if e.label not in ("dep", "conflict"):
+            continue
+        names = {p.name for p in (e.source | e.target)}
+        for a in names:
+            for b in names:
+                if a != b:
+                    neighbors[a].add(b)
+    return neighbors
+
+
 def phase_b_select(
     H: HyperGraph,
     selected_role_ids: list,
@@ -526,6 +549,21 @@ def phase_b_select(
     Phase B: Select concrete package versions for each selected role class.
 
     Uses backtracking (newest-first) over the topological package order.
+    A package's outcome only ever depends on the earlier packages it shares
+    a dependency or conflict edge with — never on an unrelated package
+    sitting between it and something it is actually connected to. Without
+    memoization, plain chronological backtracking still retries every
+    combination of those unrelated packages once per failed attempt at the
+    real conflict downstream, which is pure wasted work on any graph with
+    independent subtrees.
+
+    Failures are memoized on (position, values of only the earlier packages
+    that matter to everything from this position onward), computed once from
+    the static dependency graph. Two different assignments to the unrelated
+    packages produce the same memo key and the second lookup is instant,
+    since the outcome from this position on is a deterministic function of
+    only that relevant slice of the solution.
+
     Conflict checks use a pre-built O(1) lookup instead of scanning all edges.
     Tracks the deepest package that exhausted all candidates so Phase A blocks
     the correct role class on the next iteration.
@@ -542,6 +580,7 @@ def phase_b_select(
 
     ordered_names = _topological_order(set(name_to_rcs.keys()), graph)
     ordered_names = [n for n in ordered_names if n in name_to_rcs]
+    n_pkgs = len(ordered_names)
 
     # Pre-sort candidates per package: newest first, deduplicated
     candidates_per_name: dict = {}
@@ -560,14 +599,46 @@ def phase_b_select(
     # O(|E|) once — gives O(1) per-candidate conflict check inside backtracking
     conflict_lookup = _build_conflict_lookup(H)
 
+    # For each position, the earlier positions its own validity check can
+    # reference (direct dependency/conflict neighbors, at any version).
+    dep_neighbors = _dependency_neighbors(H)
+    name_to_idx = {name: i for i, name in enumerate(ordered_names)}
+    parents: list = [
+        {name_to_idx[n] for n in dep_neighbors.get(name, ())
+         if n in name_to_idx and name_to_idx[n] < i}
+        for i, name in enumerate(ordered_names)
+    ]
+
+    # relevant_before[idx]: earlier positions that matter to *anything* from
+    # idx to the end, not just to idx itself — the union of every later
+    # position's own parents, restricted to positions before idx. This is
+    # what two different solutions must agree on for backtrack(idx, ...) to
+    # be guaranteed to end the same way.
+    suffix_parents: set = set()
+    relevant_before: list = [set() for _ in range(n_pkgs)]
+    for i in range(n_pkgs - 1, -1, -1):
+        suffix_parents |= parents[i]
+        relevant_before[i] = {p for p in suffix_parents if p < i}
+
     # Track deepest failing package (largest idx that exhausted all candidates)
     # so Phase A blocks the correct role class on the next iteration.
     deepest_fail: list = [-1]  # mutable cell for inner function
 
+    fail_memo: set = set()
+
     def backtrack(idx: int, solution: dict):
-        if idx == len(ordered_names):
+        if idx == n_pkgs:
             return solution
         pkg_name = ordered_names[idx]
+
+        memo_key = None
+        if relevant_before[idx]:
+            memo_key = (idx, tuple(
+                solution.get(ordered_names[p]) for p in sorted(relevant_before[idx])
+            ))
+            if memo_key in fail_memo:
+                return None
+
         for candidate in candidates_per_name[pkg_name]:
             if _is_version_valid(candidate, solution, graph, H, conflict_lookup):
                 result = backtrack(idx + 1, {**solution, pkg_name: candidate.version})
@@ -576,12 +647,14 @@ def phase_b_select(
         # All candidates at this index exhausted — record deepest failure
         if idx > deepest_fail[0]:
             deepest_fail[0] = idx
+        if memo_key is not None:
+            fail_memo.add(memo_key)
         return None
 
     result = backtrack(0, {})
     if result is None:
         fail_idx = max(deepest_fail[0], 0)
-        fail_idx = min(fail_idx, len(ordered_names) - 1)
+        fail_idx = min(fail_idx, n_pkgs - 1)
         failed_name = ordered_names[fail_idx] if ordered_names else None
         failed_rid = name_to_rcs[failed_name][0].id if failed_name else -1
         return None, failed_rid
