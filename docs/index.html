@@ -545,10 +545,8 @@ footer {
   <div class="nav-inner">
     <span class="nav-logo">⬡ Vertex</span>
     <ul class="nav-links">
-      <li><a href="#algorithm">Algorithm</a></li>
-      <li><a href="#benchmark">Benchmark</a></li>
+      <li><a href="#about">About</a></li>
       <li><a href="#install">Install</a></li>
-      <li><a href="#quickstart">Quick Start</a></li>
     </ul>
   </div>
 </nav>
@@ -559,11 +557,10 @@ footer {
     <div class="hero-eyebrow">Python Package Manager</div>
     <h1>Ver<span>tex</span></h1>
     <p class="hero-sub">
-      Dependency resolution modeled as a hypergraph. Two-phase SAT solving over compressed role classes — no exponential backtracking.
+      Dependency resolution modeled as a hypergraph. Fast, conflict aware, no exponential backtracking.
     </p>
     <div class="hero-actions">
       <a href="#install" class="btn btn-primary">Get Started</a>
-      <a href="#algorithm" class="btn btn-ghost">How it works</a>
     </div>
   </div>
   <div class="hero-canvas-wrap">
@@ -571,189 +568,11 @@ footer {
   </div>
 </section>
 
-<!-- STATS STRIP -->
-<div class="stats-strip">
-  <div class="container">
-    <div class="stats-grid">
-      <div class="stat-item">
-        <div class="stat-num">2171<span class="stat-unit">×</span></div>
-        <div class="stat-label">faster than backtracking, n=12 diamond conflict</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">8<span class="stat-unit">/8</span></div>
-        <div class="stat-label">correctness tests passing</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">3</div>
-        <div class="stat-label">solvers: Hypergraph, SAT, Backtracking</div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- ABOUT -->
 <section id="about">
   <div class="container">
-    <div class="section-eyebrow">Overview</div>
-    <h2 class="section-title">Resolution as constraint satisfaction, not search</h2>
-    <p class="section-lead">
-      Most resolvers search and hope the graph stays simple. Vertex encodes it as a constraint problem from the first step.
-    </p>
-    <div class="about-grid">
-      <div class="about-card">
-        <span class="about-icon">⬡</span>
-        <h3>Hypergraph model</h3>
-        <p>Packages and versions are nodes; constraints are hyperedges. The full structure is encoded before any search starts.</p>
-      </div>
-      <div class="about-card">
-        <span class="about-icon">◎</span>
-        <h3>Role class compression</h3>
-        <p>Versions with identical dependency signatures collapse into one role class — SAT reasons over k variables, not n·v.</p>
-      </div>
-      <div class="about-card">
-        <span class="about-icon">⊕</span>
-        <h3>Layered architecture</h3>
-        <p>Domain, application, infrastructure, and CLI, strictly separated. The algorithm has no idea files or a terminal exist.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ALGORITHM -->
-<section id="algorithm">
-  <div class="container">
-    <div class="section-eyebrow">Algorithm</div>
-    <h2 class="section-title">Two phases, two levels of abstraction</h2>
-    <p class="section-lead">
-      Phase A finds a satisfying role class assignment. Phase B picks concrete versions within it.
-    </p>
-    <div class="algo-layout">
-      <div class="about-card algo-overview" style="grid-column:1/-1">
-        <p>H = (V, E): each node is a (package, version) pair, each hyperedge a constraint. Versions with identical incidence signatures σ(v) collapse into k role classes, k ≤ n·v.</p>
-        <p>The loop runs at most k+1 times. A blocked set grows each iteration until it returns a solution — or proves there isn't one.</p>
-      </div>
-      <div class="phase-card phase-a">
-        <div class="phase-header">
-          <span class="phase-badge">Phase A</span>
-          <span class="phase-title">Role Class SAT</span>
-        </div>
-        <div class="phase-body">
-          <p>The role hypergraph R(H) is built by lifting edges to role-class level, then solved by minisat22 — coverage, propagation, and blocking clauses over k boolean variables. UNSAT means no solution exists.</p>
-          <div class="phase-detail">
-Construction:   O(k·m)<br>
-SAT solving:    O(2^k) worst case<br>
-In practice:    O(k·m) via unit prop
-          </div>
-        </div>
-      </div>
-      <div class="phase-card phase-b">
-        <div class="phase-header">
-          <span class="phase-badge">Phase B</span>
-          <span class="phase-title">Version Selection</span>
-        </div>
-        <div class="phase-body">
-          <p>Packages in topological order, newest candidate first, accepted only if it survives backward and forward constraint checks. A dead end blocks the failing role class and kicks back to Phase A.</p>
-          <div class="phase-detail">
-Topo sort:      O(n + m)<br>
-Selection:      O(n·v) best case<br>
-                O(n·v²) worst case
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- BENCHMARK -->
-<section id="benchmark">
-  <div class="container">
-    <div class="section-eyebrow">Benchmark</div>
-    <h2 class="section-title">Performance under adversarial conditions</h2>
-    <p class="section-lead">
-      All three resolver strategies are timed using <code>time.perf_counter()</code>. Each scenario runs 10 times; the reported value is the median. Graph construction is excluded — only solver execution is measured.
-    </p>
-    <div class="bench-table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Scenario</th>
-            <th>Packages</th>
-            <th>Backtracking</th>
-            <th>SAT</th>
-            <th>Hypergraph (HG)</th>
-            <th>BT / HG</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Chain — 20 pkgs × 10v</td>
-            <td>20</td>
-            <td class="highlight-cell">0.07ms</td>
-            <td>0.21ms</td>
-            <td>0.17ms</td>
-            <td>—</td>
-          </tr>
-          <tr>
-            <td>Chain — 50 pkgs × 10v</td>
-            <td>50</td>
-            <td class="highlight-cell">0.19ms</td>
-            <td>0.48ms</td>
-            <td>0.41ms</td>
-            <td>—</td>
-          </tr>
-          <tr>
-            <td>Chain — 100 pkgs × 10v</td>
-            <td>100</td>
-            <td class="highlight-cell">0.39ms</td>
-            <td>0.91ms</td>
-            <td>0.78ms</td>
-            <td>—</td>
-          </tr>
-          <tr style="border-top: 2px solid var(--border)">
-            <td>Diamond n=5</td>
-            <td>11</td>
-            <td>1.5ms</td>
-            <td>0.39ms</td>
-            <td class="highlight-cell">0.12ms</td>
-            <td class="speedup-cell">12×</td>
-          </tr>
-          <tr>
-            <td>Diamond n=10</td>
-            <td>21</td>
-            <td>132ms</td>
-            <td>0.84ms</td>
-            <td class="highlight-cell">0.27ms</td>
-            <td class="speedup-cell">498×</td>
-          </tr>
-          <tr>
-            <td>Diamond n=12</td>
-            <td>25</td>
-            <td>723ms</td>
-            <td>1.10ms</td>
-            <td class="highlight-cell">0.33ms</td>
-            <td class="speedup-cell">2171×</td>
-          </tr>
-          <tr>
-            <td>Diamond n=25</td>
-            <td>51</td>
-            <td class="na-cell">not run (&gt;24h est.)</td>
-            <td>2.8ms</td>
-            <td class="highlight-cell">0.61ms</td>
-            <td class="speedup-cell">—</td>
-          </tr>
-          <tr>
-            <td>Diamond n=50</td>
-            <td>101</td>
-            <td class="na-cell">not run (&gt;24h est.)</td>
-            <td>9.4ms</td>
-            <td class="highlight-cell">1.2ms</td>
-            <td class="speedup-cell">—</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <p style="font-size:.8rem; color:var(--text-faint); margin-top:14px;">
-      Conflict-free: backtracking wins, no recovery needed. With real conflicts, the hypergraph's advantage compounds with n.
+    <p class="section-lead" style="max-width:720px; font-size:1.15rem;">
+      Vertex is a command line package manager for Python. It resolves dependencies, locks versions, manages a virtual environment, and checks for updates. It has 22 commands covering project setup, dependency management, resolution, environment installs, and registry search. At its core is a hypergraph based resolution algorithm: packages and versions become nodes, constraints become hyperedges, and versions sharing the same constraints are grouped into role classes before a SAT solver picks a valid assignment. This avoids the exponential blowup that plain backtracking runs into on conflicting dependencies, so resolution stays fast even on large, tangled dependency trees.
     </p>
   </div>
 </section>
@@ -902,101 +721,17 @@ cd SDP_2026</pre>
   </div>
 </section>
 
-<!-- QUICK START -->
-<section id="quickstart">
-  <div class="container">
-    <div class="section-eyebrow">Quick Start</div>
-    <h2 class="section-title">Up and running in two minutes</h2>
-    <p class="section-lead">Init, add, resolve, install — one tool, no context switching.</p>
-    <div class="quickstart-grid">
-      <div class="qs-block">
-        <h3>Project setup</h3>
-        <div class="copy-wrap">
-          <pre class="code-block"><span style="color:var(--text-faint)"># Initialize a new project</span>
-vertex init
-
-<span style="color:var(--text-faint)"># Add dependencies</span>
-vertex add requests ">=2.28.0"
-vertex add numpy ">=1.24.0"
-vertex add pandas ">=1.5.0"
-
-<span style="color:var(--text-faint)"># Check project state</span>
-vertex status</pre>
-        </div>
-      </div>
-      <div class="qs-block">
-        <h3>Resolution &amp; install</h3>
-        <div class="copy-wrap">
-          <pre class="code-block"><span style="color:var(--text-faint)"># Resolve with hypergraph (default)</span>
-vertex resolve
-
-<span style="color:var(--text-faint)"># Compare strategies</span>
-vertex resolve --strategy sat
-vertex resolve --strategy backtracking
-
-<span style="color:var(--text-faint)"># Install resolved packages</span>
-vertex install</pre>
-        </div>
-      </div>
-      <div class="qs-block">
-        <h3>Debug &amp; trace</h3>
-        <div class="copy-wrap">
-          <pre class="code-block"><span style="color:var(--text-faint)"># Dump the dependency graph</span>
-vertex dump
-
-<span style="color:var(--text-faint)"># Trace the resolution step by step</span>
-vertex trace
-
-<span style="color:var(--text-faint)"># Run benchmarks</span>
-python benchmark.py</pre>
-        </div>
-      </div>
-      <div class="qs-block">
-        <h3>Import existing project</h3>
-        <div class="copy-wrap">
-          <pre class="code-block"><span style="color:var(--text-faint)"># Detect and import from</span>
-<span style="color:var(--text-faint)"># requirements.txt, pyproject.toml,</span>
-<span style="color:var(--text-faint)"># setup.cfg, Pipfile and others</span>
-vertex import
-
-<span style="color:var(--text-faint)"># Show detected conflicts</span>
-vertex conflicts</pre>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- FOOTER -->
 <footer>
   <div class="container">
-    <div class="footer-inner">
+    <div class="footer-inner" style="grid-template-columns:1fr;">
       <div class="footer-brand">
         <h3>⬡ Vertex</h3>
-        <p>A package manager that models dependency resolution as a hypergraph constraint problem. Diploma thesis, Faculty of Electrical Engineering, University of Sarajevo.</p>
-        <p style="margin-top:12px">Lamija Fatić · 2026</p>
-      </div>
-      <div class="footer-col">
-        <h4>Documentation</h4>
-        <ul>
-          <li><a href="#algorithm">Algorithm</a></li>
-          <li><a href="#benchmark">Benchmark</a></li>
-          <li><a href="#install">Installation</a></li>
-          <li><a href="#quickstart">Quick Start</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Resources</h4>
-        <ul>
-          <li><a href="#">GitHub Repository</a></li>
-          <li><a href="#">Thesis PDF</a></li>
-          <li><a href="#">PyPI Package</a></li>
-          <li><a href="#">Benchmark Results</a></li>
-        </ul>
+        <p>Lamija Fatić · 2026 · Diploma thesis, Faculty of Electrical Engineering, University of Sarajevo</p>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 Lamija Fatić — Diploma Thesis</span>
+      <span>© 2026 Lamija Fatić</span>
       <span style="color:var(--text-faint)">Python 3.9+ · MIT License</span>
     </div>
   </div>
@@ -1020,7 +755,7 @@ function copyCode(btn, text) {
   });
 }
 
-/* ── hero canvas — dependency graph animation ────────── */
+/* hero canvas: dependency graph animation */
 const canvas = document.getElementById('heroCanvas');
 const ctx = canvas.getContext('2d');
 
