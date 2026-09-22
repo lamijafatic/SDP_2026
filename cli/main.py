@@ -45,6 +45,7 @@ from cli.commands.bot.run import run as bot_run_cmd
 from cli.commands.bot.config_cmd import run as bot_config_cmd
 
 # Analysis commands
+from cli.commands.test_cmd import run as test_cmd
 from cli.commands.stat import run as stat_cmd
 from cli.commands.demo import run as demo_cmd
 
@@ -76,6 +77,7 @@ COMMANDS = {
     "versions": versions_cmd,
     "list":     list_cmd,
     # analysis
+    "test":     test_cmd,
     "stat":     stat_cmd,
     "demo":     demo_cmd,
     # debug
@@ -101,11 +103,11 @@ def main():
             # Quick start block
             print(c("  Quick start\n", BOLD))
             qs = [
-                ("arbor demo",                   "walk through the algorithm interactively"),
-                ("arbor init",                   "set up a new project"),
-                ("arbor add numpy '>=1.24'",      "add a dependency"),
-                ("arbor resolve",                "resolve all constraints"),
-                ("arbor install",                "install packages into venv"),
+                ("vertex demo",                   "walk through the algorithm interactively"),
+                ("vertex init",                   "set up a new project"),
+                ("vertex add numpy '>=1.24'",      "add a dependency"),
+                ("vertex resolve",                "resolve all constraints"),
+                ("vertex install",                "install packages into venv"),
             ]
             for cmd, desc in qs:
                 print(f"    {c(f'{cmd:<30}', BRIGHT_CYAN)}{c(desc, DIM)}")
@@ -118,7 +120,7 @@ def main():
                 ("Resolution",   ["resolve", "lock", "explain", "conflicts"]),
                 ("Environment",  ["install", "sync", "clean", "build"]),
                 ("Registry",     ["search", "versions", "list"]),
-                ("Analysis",     ["stat", "demo", "graph", "trace", "dump"]),
+                ("Analysis",     ["test", "stat", "demo", "graph", "trace", "dump"]),
                 ("Bot",          ["bot-setup", "bot-check", "bot-run", "bot-config"]),
             ]
             print(c("  Commands\n", BOLD))
@@ -126,7 +128,7 @@ def main():
                 cmd_str = "  ·  ".join(c(cmd, BRIGHT_WHITE) for cmd in cmds)
                 print(f"    {c(f'{group:<14}', DIM)}{cmd_str}")
             print()
-            print(c("  arbor <command> --help   for options and examples", DIM))
+            print(c("  vertex <command> --help   for options and examples", DIM))
             print()
             return 0
 
@@ -134,7 +136,7 @@ def main():
         if not handler:
             from core.ui import err
             print(err(f"Unknown command: '{args.command}'"))
-            print(f"  Run 'arbor --help' to see available commands.")
+            print(f"  Run 'vertex --help' to see available commands.")
             return 1
 
         return handler(args) or 0

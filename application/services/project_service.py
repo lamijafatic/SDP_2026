@@ -114,19 +114,19 @@ requires-python = ">= {python_version}"
         ok_items = []
 
         if not os.path.exists(self.CONFIG_FILE):
-            issues.append("No mypm.toml found — run 'arbor init' first")
+            issues.append("No mypm.toml found — run 'vertex init' first")
         else:
             ok_items.append("Configuration file (mypm.toml) exists")
 
         if os.path.exists(self.LOCK_FILE):
             ok_items.append("Lock file (mypm.lock) is present")
         else:
-            issues.append("No lock file — run 'arbor resolve' to generate one")
+            issues.append("No lock file — run 'vertex resolve' to generate one")
 
         if os.path.exists(self.ENV_PATH):
             ok_items.append("Virtual environment (.mypm/venv) exists")
         else:
-            issues.append("No virtual environment — run 'arbor install' to create one")
+            issues.append("No virtual environment — run 'vertex install' to create one")
 
         if self.is_initialized():
             data = load_config()
@@ -134,6 +134,6 @@ requires-python = ">= {python_version}"
             if deps:
                 ok_items.append(f"{len(deps)} dependenc{'y' if len(deps)==1 else 'ies'} defined")
             else:
-                issues.append("No dependencies defined — use 'arbor add'")
+                issues.append("No dependencies defined — use 'vertex add'")
 
         return ok_items, issues

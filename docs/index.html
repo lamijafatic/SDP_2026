@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="A Python package manager with hypergraph-based dependency resolution. Two-phase SAT solving over role classes eliminates the exponential search space.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬡</text></svg>">
-<title>Arbor</title>
+<title>Vertex</title>
 <style>
 /* ── tokens ──────────────────────────────────────────── */
 :root {
@@ -540,7 +540,7 @@ footer {
 <!-- NAV -->
 <nav>
   <div class="nav-inner">
-    <span class="nav-logo">⬡ Arbor</span>
+    <span class="nav-logo">⬡ Vertex</span>
     <ul class="nav-links">
       <li><a href="#algorithm">Algorithm</a></li>
       <li><a href="#benchmark">Benchmark</a></li>
@@ -594,7 +594,7 @@ footer {
     <div class="section-eyebrow">Overview</div>
     <h2 class="section-title">A package manager built around the hard problem</h2>
     <p class="section-lead">
-      Most package managers treat dependency resolution as a search problem and hope the graph is simple enough. Arbor treats it as a constraint satisfaction problem from the start.
+      Most package managers treat dependency resolution as a search problem and hope the graph is simple enough. Vertex treats it as a constraint satisfaction problem from the start.
     </p>
     <div class="about-grid">
       <div class="about-card">
@@ -761,8 +761,8 @@ Version selection:  O(n·v) best case<br>
 <section id="install">
   <div class="container">
     <div class="section-eyebrow">Installation</div>
-    <h2 class="section-title">Get Arbor running</h2>
-    <p class="section-lead">Arbor requires Python 3.9 or higher. The only mandatory runtime dependencies are <code>python-sat</code> and <code>toml</code>.</p>
+    <h2 class="section-title">Get Vertex running</h2>
+    <p class="section-lead">Vertex requires Python 3.9 or higher. The only mandatory runtime dependencies are <code>python-sat</code> and <code>toml</code>.</p>
 
     <div style="max-width:720px">
       <div class="tabs">
@@ -783,10 +783,10 @@ Version selection:  O(n·v) best case<br>
         <div class="install-step">
           <div class="step-num">2</div>
           <div class="step-content">
-            <h4>Install Arbor via pip</h4>
+            <h4>Install Vertex via pip</h4>
             <div class="copy-wrap">
-              <pre class="code-block">pip install arbor-pm</pre>
-              <button class="copy-btn" onclick="copyCode(this, 'pip install arbor-pm')">Copy</button>
+              <pre class="code-block">pip install git+https://github.com/lamijafatic/SDP_2026.git</pre>
+              <button class="copy-btn" onclick="copyCode(this, 'pip install git+https://github.com/lamijafatic/SDP_2026.git')">Copy</button>
             </div>
           </div>
         </div>
@@ -795,7 +795,7 @@ Version selection:  O(n·v) best case<br>
           <div class="step-content">
             <h4>Verify the installation</h4>
             <div class="copy-wrap">
-              <pre class="code-block">arbor --help</pre>
+              <pre class="code-block">vertex --help</pre>
             </div>
           </div>
         </div>
@@ -819,15 +819,15 @@ Version selection:  O(n·v) best case<br>
         <div class="install-step">
           <div class="step-num">3</div>
           <div class="step-content">
-            <h4>Install Arbor</h4>
+            <h4>Install Vertex</h4>
             <div class="copy-wrap">
-              <pre class="code-block">pip install arbor-pm</pre>
-              <button class="copy-btn" onclick="copyCode(this, 'pip install arbor-pm')">Copy</button>
+              <pre class="code-block">pip install git+https://github.com/lamijafatic/SDP_2026.git</pre>
+              <button class="copy-btn" onclick="copyCode(this, 'pip install git+https://github.com/lamijafatic/SDP_2026.git')">Copy</button>
             </div>
           </div>
         </div>
         <div class="install-note">
-          ⚠ If <code>pip</code> is not found, try <code>python -m pip install arbor-pm</code>
+          ⚠ If <code>pip</code> is not found, try <code>python -m pip install git+https://github.com/lamijafatic/SDP_2026.git</code>
         </div>
       </div>
 
@@ -846,10 +846,10 @@ Version selection:  O(n·v) best case<br>
         <div class="install-step">
           <div class="step-num">2</div>
           <div class="step-content">
-            <h4>Install Arbor</h4>
+            <h4>Install Vertex</h4>
             <div class="copy-wrap">
-              <pre class="code-block">pip3 install arbor-pm</pre>
-              <button class="copy-btn" onclick="copyCode(this, 'pip3 install arbor-pm')">Copy</button>
+              <pre class="code-block">pip3 install git+https://github.com/lamijafatic/SDP_2026.git</pre>
+              <button class="copy-btn" onclick="copyCode(this, 'pip3 install git+https://github.com/lamijafatic/SDP_2026.git')">Copy</button>
             </div>
           </div>
         </div>
@@ -858,7 +858,7 @@ Version selection:  O(n·v) best case<br>
           <div class="step-content">
             <h4>Verify</h4>
             <div class="copy-wrap">
-              <pre class="code-block">arbor --help</pre>
+              <pre class="code-block">vertex --help</pre>
             </div>
           </div>
         </div>
@@ -870,9 +870,9 @@ Version selection:  O(n·v) best case<br>
           <div class="step-content">
             <h4>Clone the repository</h4>
             <div class="copy-wrap">
-              <pre class="code-block">git clone https://github.com/lamijafatic/arbor-pm
-cd arbor-pm</pre>
-              <button class="copy-btn" onclick="copyCode(this, 'git clone https://github.com/lamijafatic/arbor-pm\ncd arbor-pm')">Copy</button>
+              <pre class="code-block">git clone https://github.com/lamijafatic/SDP_2026.git
+cd SDP_2026</pre>
+              <button class="copy-btn" onclick="copyCode(this, 'git clone https://github.com/lamijafatic/SDP_2026.git\ncd SDP_2026')">Copy</button>
             </div>
           </div>
         </div>
@@ -912,39 +912,39 @@ cd arbor-pm</pre>
         <h3>Project setup</h3>
         <div class="copy-wrap">
           <pre class="code-block"><span style="color:var(--text-faint)"># Initialize a new project</span>
-arbor init
+vertex init
 
 <span style="color:var(--text-faint)"># Add dependencies</span>
-arbor add requests ">=2.28.0"
-arbor add numpy ">=1.24.0"
-arbor add pandas ">=1.5.0"
+vertex add requests ">=2.28.0"
+vertex add numpy ">=1.24.0"
+vertex add pandas ">=1.5.0"
 
 <span style="color:var(--text-faint)"># Check project state</span>
-arbor status</pre>
+vertex status</pre>
         </div>
       </div>
       <div class="qs-block">
         <h3>Resolution &amp; install</h3>
         <div class="copy-wrap">
           <pre class="code-block"><span style="color:var(--text-faint)"># Resolve with hypergraph (default)</span>
-arbor resolve
+vertex resolve
 
 <span style="color:var(--text-faint)"># Compare strategies</span>
-arbor resolve --strategy sat
-arbor resolve --strategy backtracking
+vertex resolve --strategy sat
+vertex resolve --strategy backtracking
 
 <span style="color:var(--text-faint)"># Install resolved packages</span>
-arbor install</pre>
+vertex install</pre>
         </div>
       </div>
       <div class="qs-block">
         <h3>Debug &amp; trace</h3>
         <div class="copy-wrap">
           <pre class="code-block"><span style="color:var(--text-faint)"># Dump the dependency graph</span>
-arbor debug dump
+vertex dump
 
 <span style="color:var(--text-faint)"># Trace the resolution step by step</span>
-arbor debug trace
+vertex trace
 
 <span style="color:var(--text-faint)"># Run benchmarks</span>
 python benchmark.py</pre>
@@ -956,10 +956,10 @@ python benchmark.py</pre>
           <pre class="code-block"><span style="color:var(--text-faint)"># Detect and import from</span>
 <span style="color:var(--text-faint)"># requirements.txt, pyproject.toml,</span>
 <span style="color:var(--text-faint)"># setup.cfg, Pipfile and others</span>
-arbor import
+vertex import
 
 <span style="color:var(--text-faint)"># Show detected conflicts</span>
-arbor conflicts</pre>
+vertex conflicts</pre>
         </div>
       </div>
     </div>
@@ -971,7 +971,7 @@ arbor conflicts</pre>
   <div class="container">
     <div class="footer-inner">
       <div class="footer-brand">
-        <h3>⬡ Arbor</h3>
+        <h3>⬡ Vertex</h3>
         <p>A Python package manager with formal modeling of constraint-based dependency resolution. Built as a diploma thesis at the Faculty of Electrical Engineering, University of Sarajevo.</p>
         <p style="margin-top:12px">Author: Lamija Fatić · 2026</p>
       </div>

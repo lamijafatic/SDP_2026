@@ -6,7 +6,7 @@ from application.services.pr_bot_service import PRBotService
 def run(args):
     svc = ProjectService()
     if not svc.is_initialized():
-        print(warn("No project found. Run 'arbor init' first."))
+        print(warn("No project found. Run 'vertex init' first."))
         return 1
 
     section("Checking for Dependency Updates")
@@ -45,5 +45,5 @@ def run(args):
         print(ok(f"  {len(patch)} patch update(s)"))
 
     print()
-    print(c("  Run 'arbor bot-run' to create GitHub PRs for these updates.", DIM))
+    print(c("  Run 'vertex bot-run' to create GitHub PRs for these updates.", DIM))
     return 0

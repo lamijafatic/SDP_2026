@@ -11,7 +11,7 @@ class ResolutionService:
     def __init__(self, repo=None):
         self.repo = repo or SmartRepository()
 
-    def resolve(self, dependencies: dict, strategy="sat") -> ResolutionResult:
+    def resolve(self, dependencies: dict, strategy="hypergraph") -> ResolutionResult:
         graph_svc = GraphService(self.repo)
         graph = graph_svc.build_graph(dependencies)
 

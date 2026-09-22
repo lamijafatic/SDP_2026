@@ -7,15 +7,15 @@ from domain.exceptions.resolution_error import ResolutionError
 def run(args):
     svc = ProjectService()
     if not svc.is_initialized():
-        print(warn("No project found. Run 'arbor init' first."))
+        print(warn("No project found. Run 'vertex init' first."))
         return 1
 
     project = svc.get_project_info()
     if project["dep_count"] == 0:
-        print(warn("No dependencies defined. Use 'arbor add' to add packages."))
+        print(warn("No dependencies defined. Use 'vertex add' to add packages."))
         return 1
 
-    strategy = getattr(args, "strategy", "sat")
+    strategy = getattr(args, "strategy", "hypergraph")
     section(f"Resolving Dependencies  [{strategy.upper()} Solver]")
 
     print(info(f"Project: {bold(project['name'])}"))
@@ -48,6 +48,33 @@ def run(args):
 
     print(ok(f"Lock file written: {bold('mypm.lock')}"))
     print(c(f"  {result.summary()}", DIM))
+
+    if getattr(args, "report", False):
+        print()
+        rep_spinner = Spinner("Timing solvers and building efficiency charts...")
+        rep_spinner.start()
+        try:
+            from infrastructure.persistence.toml.reader import load_config
+            from infrastructure.repository.smart_repo import SmartRepository
+            from application.services.graph_service import GraphService
+            from application.services.report_service import ReportService
+
+            data = load_config()
+            deps = data.get("dependencies", {})
+            graph = GraphService(SmartRepository()).build_graph(deps)
+            rep_spinner.stop(success=True, msg="Charts ready")
+            print(c("  Opening 3 windows: speed · phase split · complexity", DIM))
+            ReportService().generate(
+                graph=graph,
+                solution=result.solution,
+                direct_deps=list(deps.keys()),
+                strategy_used=strategy,
+                elapsed_ms=result.elapsed_ms,
+            )
+        except Exception as e:
+            rep_spinner.stop(success=False, msg="Report generation failed")
+            print(err(str(e)))
+
     print()
-    print(c("  Run 'arbor install' to install these packages.", DIM))
+    print(c("  Run 'vertex install' to install these packages.", DIM))
     return 0

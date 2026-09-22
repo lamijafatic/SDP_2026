@@ -20,7 +20,7 @@ def run(args):
 
     if not versions:
         print(warn(f"Package '{pkg}' not found."))
-        print(info("Use 'arbor search' to find available packages."))
+        print(info("Use 'vertex search' to find available packages."))
         return 1
 
     current_constraint = None
@@ -58,5 +58,5 @@ def run(args):
     table(["Version", "Status"], rows)
 
     print()
-    print(c(f"  Add with: arbor add {pkg} '>=X.Y'", DIM))
+    print(c(f"  Add with: vertex add {pkg} '>=X.Y'", DIM))
     return 0

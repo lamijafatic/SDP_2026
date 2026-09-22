@@ -1,0 +1,2 @@
+[console_scripts]
+vertex = cli.main:main

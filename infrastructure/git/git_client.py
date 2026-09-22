@@ -73,7 +73,7 @@ class GitClient:
         return bool(r.stdout.strip())
 
     def stash(self) -> None:
-        self._run("stash", "push", "--include-untracked", "-m", "arbor-bot-stash")
+        self._run("stash", "push", "--include-untracked", "-m", "vertex-bot-stash")
 
     def stash_pop(self) -> None:
         self._run("stash", "pop", check=False)

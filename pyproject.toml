@@ -3,9 +3,9 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "arbor-pm"
+name = "vertex-pm"
 version = "0.1.0"
-description = "Python Package Manager with SAT-Based Dependency Resolution"
+description = "Python Package Manager with Hypergraph-Based Dependency Resolution"
 readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}
@@ -16,7 +16,10 @@ dependencies = [
 ]
 
 [project.scripts]
-arbor = "cli.main:main"
+vertex = "cli.main:main"
+
+[tool.setuptools]
+py-modules = ["model_math_trans", "benchmark"]
 
 [tool.setuptools.packages.find]
 where = ["."]

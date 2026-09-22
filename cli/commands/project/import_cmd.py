@@ -160,9 +160,9 @@ def run(args):
     print(ok(f"  Imported {len(all_deps)} dependencies into mypm.toml."))
     print()
     print(c("  Next steps:", DIM))
-    print(c("    arbor resolve               re-resolve with imported constraints", DIM))
-    print(c("    arbor resolve --strategy hypergraph   use hypergraph resolver", DIM))
-    print(c("    arbor install               install packages into venv", DIM))
-    print(c("    arbor bot-setup             configure automated PR bot", DIM))
+    print(c("    vertex resolve               re-resolve with imported constraints", DIM))
+    print(c("    vertex resolve --strategy hypergraph   use hypergraph resolver", DIM))
+    print(c("    vertex install               install packages into venv", DIM))
+    print(c("    vertex bot-setup             configure automated PR bot", DIM))
     print()
     return 0

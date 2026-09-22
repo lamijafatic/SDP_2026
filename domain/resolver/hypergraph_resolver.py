@@ -1,7 +1,3 @@
-import sys
-import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-
 from domain.resolver.base_resolver import BaseResolver
 from domain.exceptions.resolution_error import ResolutionError
 from model_math_trans import build_hypergraph, solve_phased

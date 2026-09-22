@@ -3,21 +3,21 @@ import argparse
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        prog="arbor",
-        description="Arbor — Python Package Manager with Hypergraph Dependency Resolution",
+        prog="vertex",
+        description="Vertex — Python Package Manager with Hypergraph Dependency Resolution",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  arbor init                    Initialize a new project\n"
-            "  arbor add numpy '>=1.20'      Add a dependency\n"
-            "  arbor resolve                 Resolve all dependencies\n"
-            "  arbor install                 Install resolved packages\n"
-            "  arbor search sci              Search available packages\n"
-            "  arbor versions numpy          Show available versions\n"
+            "  vertex init                    Initialize a new project\n"
+            "  vertex add numpy '>=1.20'      Add a dependency\n"
+            "  vertex resolve                 Resolve all dependencies\n"
+            "  vertex install                 Install resolved packages\n"
+            "  vertex search sci              Search available packages\n"
+            "  vertex versions numpy          Show available versions\n"
         ),
     )
     parser.add_argument(
-        "--version", action="version", version="arbor 0.1.0"
+        "--version", action="version", version="vertex 0.1.0"
     )
 
     sub = parser.add_subparsers(dest="command", metavar="<command>")
@@ -65,6 +65,11 @@ def parse_args():
         default="hypergraph",
         help="Resolution algorithm (default: hypergraph)",
     )
+    p_resolve.add_argument(
+        "--report",
+        action="store_true",
+        help="Generate an HTML report (dependency graph + solver comparison) and open it",
+    )
 
     sub.add_parser("lock", help="Regenerate lock file (same as resolve)")
 
@@ -94,6 +99,34 @@ def parse_args():
     sub.add_parser("list", help="List all packages in the registry")
 
     # ── Analysis ─────────────────────────────────────────────
+    p_test = sub.add_parser(
+        "test",
+        help="Full resolver benchmark — all scenarios, detailed tables, and comparison plots",
+    )
+    p_test.add_argument(
+        "--mode",
+        choices=["real", "synthetic", "diamond", "all"],
+        default="all",
+        help="Which scenario group to run (default: all)",
+    )
+    p_test.add_argument(
+        "--runs",
+        type=int,
+        default=10,
+        help="Timed runs per strategy per scenario (default: 10)",
+    )
+    p_test.add_argument(
+        "--quick",
+        action="store_true",
+        help="Diamond conflicts only, 5 runs — fastest meaningful comparison",
+    )
+    p_test.add_argument(
+        "--no-plot",
+        action="store_true",
+        dest="no_plot",
+        help="Skip matplotlib chart generation",
+    )
+
     sub.add_parser(
         "stat",
         help="Live algorithm efficiency benchmark — bar charts, speedups, complexity",

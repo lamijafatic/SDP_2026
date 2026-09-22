@@ -6,7 +6,7 @@ class InstallEnvironment:
     def execute(self, on_progress=None):
         lock_svc = LockService()
         if not lock_svc.exists():
-            raise FileNotFoundError("No lock file found. Run 'arbor resolve' first.")
+            raise FileNotFoundError("No lock file found. Run 'vertex resolve' first.")
         packages = lock_svc.read()
         env_svc = EnvironmentService()
         if not env_svc.exists():

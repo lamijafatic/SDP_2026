@@ -6,7 +6,7 @@ from application.services.project_service import ProjectService
 def run(args):
     svc = ProjectService()
     if not svc.is_initialized():
-        print(warn("No project found. Run 'arbor init' first."))
+        print(warn("No project found. Run 'vertex init' first."))
         return 1
 
     section("Clean Virtual Environment")
@@ -17,7 +17,7 @@ def run(args):
         return 0
 
     print(warn("This will delete the .mypm/venv directory."))
-    print(c("  You can recreate it with 'arbor install'.", DIM))
+    print(c("  You can recreate it with 'vertex install'.", DIM))
 
     if not confirm("Remove virtual environment?", default=False):
         print(info("Cancelled."))
@@ -26,7 +26,7 @@ def run(args):
     removed = env_svc.remove()
     if removed:
         print(ok(f"Virtual environment {bold('.mypm/venv')} removed"))
-        print(c("  Run 'arbor install' to recreate it.", DIM))
+        print(c("  Run 'vertex install' to recreate it.", DIM))
     else:
         print(err("Failed to remove virtual environment."))
         return 1

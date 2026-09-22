@@ -1,3 +1,4 @@
+from collections import deque
 from domain.models.dependency import Dependency
 from domain.models.graph import DependencyGraph
 from domain.models.constraint import Constraint
@@ -42,10 +43,11 @@ class GraphService:
             graph.set_candidates(name, candidates)
 
         
-        queue = list(graph.dependencies.keys())
+        queue = deque(graph.dependencies.keys())
+        visited = set(graph.dependencies.keys())
 
         while queue:
-            name = queue.pop(0)
+            name = queue.popleft()
 
             candidates = graph.get_candidates(name)
 
@@ -77,7 +79,9 @@ class GraphService:
 
                         graph.set_candidates(sub_name, sub_candidates)
 
-                        queue.append(sub_name)  
+                        if sub_name not in visited:
+                            visited.add(sub_name)
+                            queue.append(sub_name)  
 
                 
                 graph.add_edge(name, v, parsed)

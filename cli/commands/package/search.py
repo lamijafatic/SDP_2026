@@ -16,7 +16,7 @@ def run(args):
 
     if not matches:
         print(warn(f"No packages found matching '{query}'."))
-        print(info("Try an exact PyPI package name, e.g. 'arbor add requests >=2.28'"))
+        print(info("Try an exact PyPI package name, e.g. 'vertex add requests >=2.28'"))
         return 0
 
     repo = SmartRepository()
@@ -30,6 +30,6 @@ def run(args):
 
     table(["Package", "Latest", "Available", "Source"], rows)
     print(c(f"  {len(matches)} package(s) found.", DIM))
-    print(info("Use 'arbor versions <package>' to see all versions."))
-    print(info("Use 'arbor add <package> <constraint>' to add a dependency."))
+    print(info("Use 'vertex versions <package>' to see all versions."))
+    print(info("Use 'vertex add <package> <constraint>' to add a dependency."))
     return 0

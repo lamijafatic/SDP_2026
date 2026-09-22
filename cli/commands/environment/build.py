@@ -8,7 +8,7 @@ from application.services.project_service import ProjectService
 def run(args):
     svc = ProjectService()
     if not svc.is_initialized():
-        print(warn("No project found. Run 'arbor init' first."))
+        print(warn("No project found. Run 'vertex init' first."))
         return 1
 
     section("Build Distribution Package")

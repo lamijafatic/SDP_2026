@@ -27,6 +27,9 @@ arbor_pm.egg-info/top_level.txt
 cli/context.py
 cli/main.py
 cli/parser.py
+cli/commands/demo.py
+cli/commands/stat.py
+cli/commands/test_cmd.py
 cli/commands/bot/__init__.py
 cli/commands/bot/check.py
 cli/commands/bot/config_cmd.py
@@ -79,6 +82,7 @@ domain/models/version.py
 domain/resolver/backtracking_resolver.py
 domain/resolver/base_resolver.py
 domain/resolver/heuristic_resolver.py
+domain/resolver/hypergraph_resolver.py
 domain/resolver/sat_adapter.py
 domain/resolver/sat_resolver.py
 domain/resolver/state.py
@@ -113,3 +117,4 @@ infrastructure/repository/local_repo.py
 infrastructure/repository/pypi_adapter.py
 infrastructure/repository/pypi_repo.py
 infrastructure/repository/smart_repo.py
+tests/test_system_requirements.py

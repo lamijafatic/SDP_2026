@@ -1,5 +1,5 @@
 """
-arbor demo — interactive algorithm walkthrough.
+vertex demo — interactive algorithm walkthrough.
 
 Walks the user through the two-phase hypergraph dependency resolution
 algorithm using a concrete diamond-conflict example.
@@ -26,12 +26,12 @@ def run(args):
 # ── Menu ───────────────────────────────────────────────────────────────────────
 
 def _show_menu(auto, _p):
-    section("Arbor Demo")
+    section("Vertex Demo")
     print(c("  Explore the hypergraph dependency resolution algorithm.\n", DIM))
 
     choice = menu_prompt([
         "Algorithm walkthrough  — step through a diamond conflict, live",
-        "Efficiency stats       — run the live benchmark  (arbor stat)",
+        "Efficiency stats       — run the live benchmark  (vertex stat)",
         "Exit",
     ])
 

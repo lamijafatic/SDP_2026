@@ -1,5 +1,5 @@
 """
-arbor stat — live algorithm efficiency report.
+vertex stat — live algorithm efficiency report.
 
 Runs an in-memory diamond-conflict benchmark (no file I/O) and displays
 ASCII bar charts, role-class compression stats, and a complexity table.
@@ -109,72 +109,65 @@ def run(args):
     from domain.resolver.backtracking_resolver import BacktrackingResolver
 
     section("Algorithm Efficiency Report")
-    RUNS     = 5
-    BT_LIMIT = 5   # only run BT at n ≤ this (scales exponentially)
 
-    cases = [
-        {"n": 5,  "label": "Diamond  n=5   (11 packages,  2 versions each + 12 core versions)"},
-        {"n": 10, "label": "Diamond  n=10  (21 packages,  2 versions each + 22 core versions)"},
+    # 3 runs is enough for a stable median; keeps stat under ~5 seconds
+    RUNS = 3
+
+    # All three solvers measured up to n=12; beyond that BT exceeds 24 h
+    BT_CASES   = [
+        {"n": 5,  "label": "Diamond n=5   (11 packages)"},
+        {"n": 10, "label": "Diamond n=10  (21 packages)"},
+        {"n": 12, "label": "Diamond n=12  (25 packages)"},
+    ]
+    # HG-only scale check — BT skipped, just shows how HG holds up
+    SCALE_CASES = [
+        {"n": 25, "label": "n=25  (51 packages)"},
+        {"n": 50, "label": "n=50 (101 packages)"},
     ]
 
+    print(c(f"  Live benchmark — {RUNS} runs, median, solver-only timing (no I/O)", DIM))
+    print(c("  Backtracking skipped for n > 12 (projected > 24 h at that scale).\n", DIM))
+
     results = []
+    for case in BT_CASES:
+        n, lbl = case["n"], case["label"]
+        g = _make_diamond(n)
 
-    print(c(f"  Live benchmark — {RUNS} runs each, solver-only timing (no I/O)\n", DIM))
-
-    for case in cases:
-        n   = case["n"]
-        lbl = case["label"]
-        g   = _make_diamond(n)
-
-        sp = Spinner(f"{lbl}...")
+        sp = Spinner(f"  {lbl} ...")
         sp.start()
-
         hg_ms  = _time_hypergraph(g, RUNS)
         sat_ms = _time_solver(SATResolver, g, RUNS)
-        bt_ms  = _time_solver(BacktrackingResolver, g, RUNS) if n <= BT_LIMIT else None
-
-        sp.stop(success=True, msg=f"Done — {lbl}")
+        bt_ms  = _time_solver(BacktrackingResolver, g, RUNS)
+        sp.stop(success=True, msg=lbl)
 
         nodes, k = _compression_stats(g)
         results.append(dict(label=lbl, n=n, hg_ms=hg_ms, sat_ms=sat_ms,
                             bt_ms=bt_ms, nodes=nodes, k=k))
 
-    # ── Display results ────────────────────────────────────────────────────────
+    # ── Display per-case results ───────────────────────────────────────────────
     for r in results:
-        hg_ms  = r["hg_ms"]
-        sat_ms = r["sat_ms"]
-        bt_ms  = r["bt_ms"]
-
+        hg_ms, sat_ms, bt_ms = r["hg_ms"], r["sat_ms"], r["bt_ms"]
         print()
         print(c(f"  {r['label']}", BOLD, BRIGHT_WHITE))
         print(c("  " + "─" * 60, DIM))
 
-        max_ms = max(m for m in [hg_ms, sat_ms, bt_ms or 0] if m > 0) or 1
-
+        max_ms = max(hg_ms, sat_ms, bt_ms) or 1
         bar_chart_row("Hypergraph",   hg_ms,  max_ms, color=BRIGHT_GREEN)
         bar_chart_row("SAT",          sat_ms, max_ms, color=BRIGHT_CYAN)
+        bar_chart_row("Backtracking", bt_ms,  max_ms, color=BRIGHT_YELLOW)
 
-        if bt_ms is not None:
-            bar_chart_row("Backtracking", bt_ms, max_ms, color=BRIGHT_YELLOW)
-        else:
-            print(
-                f"  {'Backtracking':<18} [{c('░' * 30, DIM)}]  "
-                + c("not run — exponential at this size", DIM)
-            )
-
-        print()
-
+        speedup_bt  = bt_ms  / hg_ms if hg_ms > 0 else 1
         speedup_sat = sat_ms / hg_ms if hg_ms > 0 else 1
-        print(c("  Speedup vs SAT         ", DIM) + c(f"{speedup_sat:.1f}×", BOLD, BRIGHT_CYAN) + c(" faster", DIM))
+        print()
+        print(c("  Speedup vs Backtrack   ", DIM)
+              + c(f"{speedup_bt:.0f}×", BOLD, BRIGHT_GREEN)
+              + c(" faster", DIM))
+        print(c("  Speedup vs SAT         ", DIM)
+              + c(f"{speedup_sat:.1f}×", BOLD, BRIGHT_CYAN)
+              + c(" faster", DIM))
 
-        if bt_ms is not None:
-            speedup_bt = bt_ms / hg_ms if hg_ms > 0 else 1
-            print(c("  Speedup vs Backtrack   ", DIM) + c(f"{speedup_bt:.1f}×", BOLD, BRIGHT_GREEN) + c(" faster", DIM))
-
-        # Compression stats
-        nodes = r["nodes"]
-        k     = r["k"]
-        pct   = (1 - k / nodes) * 100 if nodes > 0 else 0
+        nodes, k = r["nodes"], r["k"]
+        pct = (1 - k / nodes) * 100 if nodes > 0 else 0
         print()
         print(c("  Role class compression:", BOLD))
         print(c("    Full version space  ", DIM) + c(f"{nodes}", BOLD) + c(" variables", DIM))
@@ -183,28 +176,33 @@ def run(args):
               + c(f" role classes  ({pct:.0f}% reduction)", DIM))
         print(c("    Phase A search      ", DIM)
               + c(f"2^{k} = {2**k:,}", BOLD)
-              + c(f"  (brute force: 2^{nodes} = {2**nodes:,})", DIM))
+              + c(f"  (vs brute force 2^{nodes} = {2**nodes:,})", DIM))
 
-    # ── Reference speedup at larger n ──────────────────────────────────────────
+    # ── HG-only scaling for large n ────────────────────────────────────────────
     divider()
     print()
-    print(c("  Reference measurements (benchmarked separately at n=12):\n", DIM))
+    print(c("  HG scaling at larger n  (BT not run — projected > 24 h):\n", DIM))
 
-    ref_rows = [
-        ["n=12  (25 packages)",
-         "Hypergraph", c("0.33 ms", BRIGHT_GREEN), c("2171×", BOLD, BRIGHT_GREEN)],
-        ["",
-         "SAT",        c("1.10 ms", BRIGHT_CYAN),  c("660×", BRIGHT_CYAN)],
-        ["",
-         "Backtracking", c("723 ms",  BRIGHT_YELLOW), c("baseline", DIM)],
-    ]
-    for row in ref_rows:
-        scenario, strategy, timing, note = row
-        print(f"    {c(scenario, DIM):<28}{c(strategy, BRIGHT_WHITE):<16}{timing:<20}{note}")
+    scale_rows = []
+    for sc in SCALE_CASES:
+        n, lbl = sc["n"], sc["label"]
+        g = _make_diamond(n)
+
+        sp = Spinner(f"  {lbl} ...")
+        sp.start()
+        hg_ms  = _time_hypergraph(g, RUNS)
+        sat_ms = _time_solver(SATResolver, g, RUNS)
+        sp.stop(success=True, msg=lbl)
+
+        scale_rows.append([
+            lbl,
+            f"{hg_ms:.3f} ms",
+            f"{sat_ms:.3f} ms",
+            c("> 24 h", DIM),
+        ])
 
     print()
-    print(c("  At n=25:  Backtracking exceeds 24 hours.  Hypergraph: 0.61 ms.", DIM))
-    print(c("  At n=50:  Hypergraph: 1.2 ms.", DIM))
+    table(["Scenario", "HG (ms)", "SAT (ms)", "BT"], scale_rows)
 
     # ── Complexity table ───────────────────────────────────────────────────────
     print()
@@ -226,5 +224,6 @@ def run(args):
     ]
     table(["Strategy", "Worst case", "Mechanism", "Observation"], rows)
     print(c("  k = role classes  n = packages  v = versions  m = dep edges\n", DIM))
+    print(c("  Run 'vertex test' for the full benchmark with matplotlib charts.\n", DIM))
 
     return 0

@@ -73,7 +73,7 @@ def banner():
     logo = [
         "",
         c("  ╔══════════════════════════════════════╗", BRIGHT_CYAN),
-        c("  ║", BRIGHT_CYAN) + c("        ⬡  ARBOR  v0.1.0               ", BOLD, BRIGHT_WHITE) + c("║", BRIGHT_CYAN),
+        c("  ║", BRIGHT_CYAN) + c("        ⬡  VERTEX  v0.1.0               ", BOLD, BRIGHT_WHITE) + c("║", BRIGHT_CYAN),
         c("  ║", BRIGHT_CYAN) + c("      Python Package Manager           ", DIM) + c("║", BRIGHT_CYAN),
         c("  ║", BRIGHT_CYAN) + c("      Hypergraph Dependency Resolver   ", DIM) + c("║", BRIGHT_CYAN),
         c("  ╚══════════════════════════════════════╝", BRIGHT_CYAN),

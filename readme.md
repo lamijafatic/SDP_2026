@@ -1,7 +1,7 @@
 
 ## Overview
 
-Arbor is a command-line package manager for Python projects. It uses a SAT solver for deterministic dependency resolution, manages virtual environments, tracks locked versions, and includes an automated GitHub PR bot that opens pull requests when your dependencies have updates available.
+Vertex is a command-line package manager for Python projects. It uses a SAT solver for deterministic dependency resolution, manages virtual environments, tracks locked versions, and includes an automated GitHub PR bot that opens pull requests when your dependencies have updates available.
 
 ---
 
@@ -47,25 +47,25 @@ Clone the repository and install in editable mode:
     cd SDP_2026
     pip install -e .
 
-After installation, the arbor command is available globally.
+After installation, the vertex command is available globally.
 
 ---
 
 ## Quick Start — New Project
 
-    arbor init myproject        create a new project
-    arbor add requests          add a dependency
-    arbor resolve               calculate compatible versions
-    arbor install               install packages into a virtual environment
-    arbor status                verify everything is working
+    vertex init myproject        create a new project
+    vertex add requests          add a dependency
+    vertex resolve               calculate compatible versions
+    vertex install               install packages into a virtual environment
+    vertex status                verify everything is working
 
 ## Quick Start — Existing Project
 
     cd your-existing-project
-    arbor import .              detect and import existing dependency files
-    arbor resolve               generate a lock file
-    arbor install               install packages
-    arbor bot-setup             configure the PR update bot
+    vertex import .              detect and import existing dependency files
+    vertex resolve               generate a lock file
+    vertex install               install packages
+    vertex bot-setup             configure the PR update bot
 
 ---
 
@@ -73,30 +73,30 @@ After installation, the arbor command is available globally.
 
 ### Project Commands
 
-arbor init [name] [--python VERSION]
+vertex init [name] [--python VERSION]
 
-    Initializes a new Arbor project in the current directory. Creates mypm.toml with project
+    Initializes a new Vertex project in the current directory. Creates mypm.toml with project
     metadata. Optionally accepts a project name and Python version. If no name is given,
     it prompts interactively.
 
-arbor info
+vertex info
 
     Shows project metadata from mypm.toml: name, version, Python version, description,
     number of dependencies, and whether a lock file and virtual environment exist.
 
-arbor status
+vertex status
 
     Full health overview of the project. Shows project info, all declared dependencies
     with their constraints, lock file status, virtual environment status, and a summary
     of installed packages.
 
-arbor doctor
+vertex doctor
 
     Runs a health check and reports any issues: missing mypm.toml, missing lock file,
     missing virtual environment, mismatch between locked and installed packages,
     missing Python version.
 
-arbor import [path]
+vertex import [path]
 
     Scans an existing project directory for dependency files and imports them into mypm.toml.
     Supports: requirements.txt, requirements.in, pyproject.toml (PEP 621 and Poetry formats),
@@ -110,97 +110,97 @@ arbor import [path]
 
 ### Dependency Commands
 
-arbor add PACKAGE [CONSTRAINT]
+vertex add PACKAGE [CONSTRAINT]
 
     Adds a dependency to mypm.toml. Constraint is optional and defaults to >=0.1.
     Examples:
-        arbor add numpy
-        arbor add requests ">=2.28"
-        arbor add pandas ">=1.5,<3.0"
+        vertex add numpy
+        vertex add requests ">=2.28"
+        vertex add pandas ">=1.5,<3.0"
 
-arbor remove PACKAGE
+vertex remove PACKAGE
 
     Removes a dependency from mypm.toml.
 
-arbor show
+vertex show
 
     Lists all declared dependencies with their version constraints.
 
-arbor update [PACKAGE]
+vertex update [PACKAGE]
 
     Updates a dependency to the latest compatible version. If no package is given,
     updates all dependencies.
 
 ### Resolution Commands
 
-arbor resolve [--strategy sat|backtracking]
+vertex resolve [--strategy sat|backtracking]
 
     Resolves all declared dependencies using a SAT solver (default) or backtracking
     algorithm. Finds a set of package versions that satisfy all constraints simultaneously.
     Writes the result to mypm.lock. Must be run after adding, removing, or updating
     dependencies.
 
-arbor lock
+vertex lock
 
-    Regenerates the lock file. Equivalent to arbor resolve.
+    Regenerates the lock file. Equivalent to vertex resolve.
 
-arbor explain
+vertex explain
 
     Shows which version was selected for each package and why — which constraint
     drove the decision.
 
-arbor conflicts
+vertex conflicts
 
     Lists known conflicts in the package registry — packages that cannot be installed
     together.
 
 ### Environment Commands
 
-arbor install [--dry-run]
+vertex install [--dry-run]
 
     Installs all packages from the lock file into a local virtual environment (.venv).
     Use --dry-run to see what would be installed without actually installing anything.
 
-arbor sync
+vertex sync
 
     Syncs the virtual environment with the current lock file. Installs missing packages
     and removes packages that are no longer in the lock file.
 
-arbor clean
+vertex clean
 
-    Removes the virtual environment completely. Use arbor install to recreate it.
+    Removes the virtual environment completely. Use vertex install to recreate it.
 
-arbor build
+vertex build
 
     Builds a distribution package (source distribution and wheel) from the current project.
 
 ### Package Registry Commands
 
-arbor search QUERY
+vertex search QUERY
 
     Searches available packages in the registry by name or keyword.
 
-arbor versions PACKAGE
+vertex versions PACKAGE
 
     Shows all available versions for a given package.
 
-arbor list
+vertex list
 
     Lists all packages available in the registry.
 
 ### Debug Commands
 
-arbor graph
+vertex graph
 
     Visualizes the full dependency graph: which packages depend on which, and what
     version constraints exist between them.
 
-arbor trace
+vertex trace
 
     Traces the resolution process step by step, showing how the SAT solver or
     backtracking algorithm arrived at its decisions.
 
-arbor dump
+vertex dump
 
     Dumps the complete internal project state as JSON. Useful for debugging or
     inspecting the raw data structures.
@@ -211,7 +211,7 @@ The bot module automates dependency updates by checking PyPI for newer versions 
 opening GitHub pull requests. Each update gets its own PR with a description of what
 changed, the version delta, and a risk level classification.
 
-arbor bot-setup
+vertex bot-setup
 
     Interactive setup wizard. Run this first before using any other bot commands.
     It guides you through:
@@ -224,13 +224,13 @@ arbor bot-setup
       - Setting an ignore list for packages you never want auto-updated
     All settings are saved to the [bot] section of mypm.toml.
 
-arbor bot-check
+vertex bot-check
 
     Checks PyPI for available updates without creating any branches or pull requests.
     Shows a table of packages with newer versions, their current and latest versions,
     the update type (patch, minor, or major), and the risk level.
 
-arbor bot-run [--dry-run]
+vertex bot-run [--dry-run]
 
     Creates GitHub pull requests for all available dependency updates. For each update it:
     creates a git branch, modifies mypm.toml and mypm.lock, commits the change, pushes
@@ -239,7 +239,7 @@ arbor bot-run [--dry-run]
     Before running, it validates all prerequisites and shows a clear error message if
     anything is missing (git repo, remote, lock file, bot configuration, GitHub token).
 
-arbor bot-config [--show] [--init]
+vertex bot-config [--show] [--init]
 
     Shows or initializes the bot configuration stored in mypm.toml.
     Use --show to display current settings (token is masked).
@@ -249,7 +249,7 @@ arbor bot-config [--show] [--init]
 
 ## Bot Configuration
 
-Bot settings are stored in the [bot] section of mypm.toml (managed by arbor bot-setup):
+Bot settings are stored in the [bot] section of mypm.toml (managed by vertex bot-setup):
 
     github_repo     your GitHub repository in owner/repo format (e.g. username/myproject)
     github_token    personal access token with repo scope (or set GITHUB_TOKEN env var)
@@ -264,7 +264,7 @@ Bot settings are stored in the [bot] section of mypm.toml (managed by arbor bot-
 
 The bot requires a GitHub personal access token with repo scope. You can set it in three ways:
 
-1. Run arbor bot-setup and enter the token when prompted (saved to mypm.toml)
+1. Run vertex bot-setup and enter the token when prompted (saved to mypm.toml)
 2. Set the environment variable: export GITHUB_TOKEN=your_token_here
 3. Add it permanently to your shell profile (~/.zshrc or ~/.bashrc)
 
@@ -284,8 +284,8 @@ The bot classifies updates by risk level based on semantic versioning:
 ## Project Files
 
     mypm.toml       project configuration, dependencies, and bot settings
-    mypm.lock       locked package versions (generated by arbor resolve)
-    .venv/          virtual environment (generated by arbor install)
+    mypm.lock       locked package versions (generated by vertex resolve)
+    .venv/          virtual environment (generated by vertex install)
 
 ---
 
@@ -293,21 +293,21 @@ The bot classifies updates by risk level based on semantic versioning:
 
 New project from scratch:
 
-    arbor init myapp
-    arbor add requests ">=2.28"
-    arbor add numpy ">=1.24"
-    arbor resolve
-    arbor install
-    arbor bot-setup
-    arbor bot-check
-    arbor bot-run
+    vertex init myapp
+    vertex add requests ">=2.28"
+    vertex add numpy ">=1.24"
+    vertex resolve
+    vertex install
+    vertex bot-setup
+    vertex bot-check
+    vertex bot-run
 
 Existing project onboarding:
 
     cd existing-project
-    arbor import .
-    arbor resolve
-    arbor install
-    arbor bot-setup
-    arbor bot-run --dry-run
-    arbor bot-run
+    vertex import .
+    vertex resolve
+    vertex install
+    vertex bot-setup
+    vertex bot-run --dry-run
+    vertex bot-run

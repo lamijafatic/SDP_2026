@@ -31,7 +31,7 @@ _DESCRIPTIONS = {
 def run(args):
     svc = ProjectService()
     if not svc.is_initialized():
-        print(warn("No project found. Run 'arbor init' first."))
+        print(warn("No project found. Run 'vertex init' first."))
         return 1
 
     show_only = getattr(args, "show", False)
@@ -56,7 +56,7 @@ def _show_config():
 
     if not bot:
         print(warn("  No [bot] section found in mypm.toml."))
-        print(c("  Run 'arbor bot-config --init' to add default configuration.", DIM))
+        print(c("  Run 'vertex bot-config --init' to add default configuration.", DIM))
         print()
         return
 
@@ -104,4 +104,4 @@ def _init_config():
 
     print()
     print(c("  Edit mypm.toml to customise the bot settings.", DIM))
-    print(c("  Set GITHUB_TOKEN env var or fill in 'github_token' before running 'arbor bot-run'.", DIM))
+    print(c("  Set GITHUB_TOKEN env var or fill in 'github_token' before running 'vertex bot-run'.", DIM))

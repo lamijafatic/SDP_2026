@@ -71,7 +71,7 @@ class SATResolver(BaseResolver):
             if pkg1 in self.graph.dependencies and pkg2 in self.graph.dependencies:
                 v1_key = (pkg1, ver1)
                 v2_key = (pkg2, ver2)
-                if v1_key in self.var_map or True:
+                if v1_key in self.var_map and v2_key in self.var_map:
                     v1 = self._get_var(pkg1, ver1)
                     v2 = self._get_var(pkg2, ver2)
                     cnf.append([-v1, -v2])

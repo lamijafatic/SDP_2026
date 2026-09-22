@@ -10,7 +10,7 @@ def run(args):
     svc = ProjectService()
 
     if not svc.is_initialized():
-        print(warn("No project found. Run 'arbor init' first."))
+        print(warn("No project found. Run 'vertex init' first."))
         return 1
 
     d = svc.get_project_info()
@@ -45,7 +45,7 @@ def run(args):
     if lock_svc.exists():
         print(ok(f"Lock file (mypm.lock) — {len(locked)} packages pinned"))
     else:
-        print(err("Lock file missing — run 'arbor resolve'"))
+        print(err("Lock file missing — run 'vertex resolve'"))
 
     # Environment
     if env_svc.exists():
@@ -58,7 +58,7 @@ def run(args):
             else:
                 print(ok(f"  All {len(locked)} packages are installed"))
     else:
-        print(err("Virtual environment missing — run 'arbor install'"))
+        print(err("Virtual environment missing — run 'vertex install'"))
 
     print()
     return 0

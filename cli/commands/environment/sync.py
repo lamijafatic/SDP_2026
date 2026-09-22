@@ -7,13 +7,13 @@ from application.services.environment_service import EnvironmentService
 def run(args):
     svc = ProjectService()
     if not svc.is_initialized():
-        print(warn("No project found. Run 'arbor init' first."))
+        print(warn("No project found. Run 'vertex init' first."))
         return 1
 
     lock_svc = LockService()
     if not lock_svc.exists():
         print(err("No lock file found."))
-        print(info("Run 'arbor resolve' first to generate mypm.lock"))
+        print(info("Run 'vertex resolve' first to generate mypm.lock"))
         return 1
 
     section("Syncing Environment with Lock File")

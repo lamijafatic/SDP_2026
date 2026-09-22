@@ -19,7 +19,7 @@ class GitHubClient:
             "Authorization": f"token {token}",
             "Accept": "application/vnd.github.v3+json",
             "Content-Type": "application/json",
-            "User-Agent": "arbor-pm/0.1.0",
+            "User-Agent": "vertex-pm/0.1.0",
         }
 
     def _request(

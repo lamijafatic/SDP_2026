@@ -10,7 +10,7 @@ from infrastructure.persistence.toml.writer import save_config
 def run(args):
     svc = ProjectService()
     if not svc.is_initialized():
-        print(warn("No project found. Run 'arbor init' first."))
+        print(warn("No project found. Run 'vertex init' first."))
         return 1
 
     section("Bot Setup")
@@ -119,8 +119,8 @@ def run(args):
     print(ok("  Bot configuration saved to mypm.toml."))
     print()
     print(c("  Next steps:", DIM))
-    print(c("    arbor bot-check    preview available updates", DIM))
-    print(c("    arbor bot-run      create GitHub PRs", DIM))
+    print(c("    vertex bot-check    preview available updates", DIM))
+    print(c("    vertex bot-run      create GitHub PRs", DIM))
     print()
     return 0
 

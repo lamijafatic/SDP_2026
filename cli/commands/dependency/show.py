@@ -8,7 +8,7 @@ from infrastructure.persistence.lock.lock_reader import read_lock
 def run(args):
     svc = ProjectService()
     if not svc.is_initialized():
-        print(warn("No project found. Run 'arbor init' first."))
+        print(warn("No project found. Run 'vertex init' first."))
         return 1
 
     dep_svc = DependencyService()
@@ -18,7 +18,7 @@ def run(args):
 
     if not deps:
         print(warn("No dependencies defined."))
-        print(info("Use 'arbor add <package> <constraint>' to add packages."))
+        print(info("Use 'vertex add <package> <constraint>' to add packages."))
         return 0
 
     locked = {}
@@ -36,5 +36,5 @@ def run(args):
     print(c(f"  {len(deps)} direct dependenc{'y' if len(deps)==1 else 'ies'}", DIM))
 
     if not locked:
-        print(info("Run 'arbor resolve' to resolve versions."))
+        print(info("Run 'vertex resolve' to resolve versions."))
     return 0

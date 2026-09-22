@@ -32,7 +32,7 @@ class PyPIRepository(AbstractRepository):
             with open(path) as f:
                 return json.load(f)
 
-        req = urllib.request.Request(url, headers={"User-Agent": "arbor/0.1.0"})
+        req = urllib.request.Request(url, headers={"User-Agent": "vertex/0.1.0"})
         try:
             with urllib.request.urlopen(req, timeout=15) as resp:
                 data = json.loads(resp.read().decode())

@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="arbor-pm",
+    name="vertex-pm",
     version="0.1.0",
     description="Python Package Manager with SAT-Based Dependency Resolution",
     packages=find_packages(),
@@ -14,7 +14,7 @@ setup(
     python_requires=">=3.9",
     entry_points={
         "console_scripts": [
-            "arbor=cli.main:main",
+            "vertex=cli.main:main",
         ],
     },
 )

@@ -1,5 +1,5 @@
 """
-arbor trace — step-by-step trace of the hypergraph resolution process
+vertex trace — step-by-step trace of the hypergraph resolution process
 on the current project's actual dependencies.
 """
 from core.ui import (
@@ -16,13 +16,13 @@ from application.services.graph_service import GraphService
 def run(args):
     svc = ProjectService()
     if not svc.is_initialized():
-        print(warn("No project found. Run 'arbor init' first."))
+        print(warn("No project found. Run 'vertex init' first."))
         return 1
 
     data = load_config()
     deps = data.get("dependencies", {})
     if not deps:
-        print(warn("No dependencies to trace. Use 'arbor add' to add packages."))
+        print(warn("No dependencies to trace. Use 'vertex add' to add packages."))
         return 0
 
     section("Hypergraph Resolution Trace")
@@ -114,7 +114,7 @@ def run(args):
 
     if solution is None:
         print()
-        print(warn("No satisfying assignment found. Check your constraints with 'arbor conflicts'."))
+        print(warn("No satisfying assignment found. Check your constraints with 'vertex conflicts'."))
         return 1
 
     # ── Result ────────────────────────────────────────────────────────────────
@@ -127,6 +127,6 @@ def run(args):
     n_total  = len(solution)
     n_trans  = n_total - n_direct
     print(c(f"  {n_direct} direct  +  {n_trans} transitive  =  {n_total} packages total\n", DIM))
-    print(ok("Trace complete. Run 'arbor resolve' to write the lock file."))
+    print(ok("Trace complete. Run 'vertex resolve' to write the lock file."))
     print()
     return 0

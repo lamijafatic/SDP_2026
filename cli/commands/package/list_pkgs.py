@@ -1,3 +1,4 @@
+import re
 from core.ui import section, info, table, bold, c, DIM, BRIGHT_GREEN
 from infrastructure.repository.smart_repo import SmartRepository
 
@@ -24,11 +25,10 @@ def run(args):
         )
         rows.append([bold(pkg), c(latest, BRIGHT_GREEN), str(len(versions)), deps_str])
 
-    import re
     table(["Package", "Latest", "Versions", "Requires"], rows)
     print(c(f"  {len(packages)} packages in local registry", DIM))
     print()
-    print(info("Use 'arbor search <query>' to search by name."))
-    print(info("Use 'arbor versions <pkg>' to see all versions."))
-    print(info("Any PyPI package works: arbor add requests '>=2.28'"))
+    print(info("Use 'vertex search <query>' to search by name."))
+    print(info("Use 'vertex versions <pkg>' to see all versions."))
+    print(info("Any PyPI package works: vertex add requests '>=2.28'"))
     return 0

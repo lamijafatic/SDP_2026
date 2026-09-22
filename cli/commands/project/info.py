@@ -6,7 +6,7 @@ from application.services.project_service import ProjectService
 def run(args):
     svc = ProjectService()
     if not svc.is_initialized():
-        print(warn("No project found. Run 'arbor init' first."))
+        print(warn("No project found. Run 'vertex init' first."))
         return 1
 
     d = svc.get_project_info()
@@ -32,7 +32,7 @@ def run(args):
         table(["Package", "Constraint"], dep_rows)
 
     if not d["lock_exists"]:
-        print(info("Run 'arbor resolve' to generate a lock file."))
+        print(info("Run 'vertex resolve' to generate a lock file."))
     if not d["env_exists"]:
-        print(info("Run 'arbor install' to set up the virtual environment."))
+        print(info("Run 'vertex install' to set up the virtual environment."))
     return 0

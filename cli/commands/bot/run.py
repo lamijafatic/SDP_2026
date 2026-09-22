@@ -9,7 +9,7 @@ from infrastructure.persistence.toml.reader import load_config
 def run(args):
     svc = ProjectService()
     if not svc.is_initialized():
-        print(warn("No project found. Run 'arbor init' first."))
+        print(warn("No project found. Run 'vertex init' first."))
         return 1
 
     if not _check_prerequisites():
@@ -81,26 +81,26 @@ def _check_prerequisites() -> bool:
 
     # Lock file check
     if not os.path.exists("mypm.lock"):
-        issues.append("No lock file found. Run 'arbor resolve' first.")
+        issues.append("No lock file found. Run 'vertex resolve' first.")
 
     # Bot config check
     try:
         config = load_config()
         bot = config.get("bot", {})
         if not bot:
-            issues.append("No [bot] section in mypm.toml. Run 'arbor bot-setup' first.")
+            issues.append("No [bot] section in mypm.toml. Run 'vertex bot-setup' first.")
         else:
             token = bot.get("github_token") or os.environ.get("GITHUB_TOKEN", "")
             if not token:
                 issues.append(
-                    "GitHub token not set. Run 'arbor bot-setup' or set GITHUB_TOKEN env var."
+                    "GitHub token not set. Run 'vertex bot-setup' or set GITHUB_TOKEN env var."
                 )
             if not bot.get("github_repo"):
                 issues.append(
-                    "github_repo not configured. Run 'arbor bot-setup'."
+                    "github_repo not configured. Run 'vertex bot-setup'."
                 )
     except Exception:
-        issues.append("Could not read mypm.toml. Run 'arbor bot-setup' first.")
+        issues.append("Could not read mypm.toml. Run 'vertex bot-setup' first.")
 
     if issues:
         print()
@@ -108,7 +108,7 @@ def _check_prerequisites() -> bool:
         for issue in issues:
             print(c(f"  - {issue}", DIM))
         print()
-        print(c("  Run 'arbor bot-setup' to configure everything.", DIM))
+        print(c("  Run 'vertex bot-setup' to configure everything.", DIM))
         print()
         return False
 

@@ -15,7 +15,7 @@ class UpdateResult:
     def branch_name(self) -> str:
         safe = self.package.replace("-", "_").replace(".", "_").lower()
         safe_ver = self.latest_version.replace(".", "_")
-        return f"arbor/update-{safe}-{safe_ver}"
+        return f"vertex/update-{safe}-{safe_ver}"
 
     def commit_message(self) -> str:
         return (
