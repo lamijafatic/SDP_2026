@@ -584,7 +584,7 @@ footer {
   <div class="container">
     <div class="about-layout">
       <p class="section-lead" style="max-width:none; font-size:1.15rem; margin-bottom:0;">
-        Vertex is a command line package manager for Python. It resolves dependencies, locks versions, manages a virtual environment, and checks for updates. It has 23 commands covering project setup, dependency management, resolution, environment installs, and registry search. At its core is a hypergraph based resolution algorithm: packages and versions become nodes, constraints become hyperedges, and versions sharing the same constraints are grouped into role classes before a SAT solver picks a valid assignment. This avoids the exponential blowup that plain backtracking runs into on conflicting dependencies, so resolution stays fast even on large, tangled dependency trees.
+        Vertex is a command line package manager for Python. It resolves dependencies, locks versions, manages a virtual environment, checks for updates, and can open GitHub pull requests when new versions become available. It has 27 commands covering project setup, dependency management, resolution, environment installs, registry search, and update automation. At its core is a hypergraph based resolution algorithm: packages and versions become nodes, constraints become hyperedges, and versions sharing the same constraints are grouped into role classes before a SAT solver picks a valid assignment. This avoids the exponential blowup that plain backtracking runs into on conflicting dependencies, so resolution stays fast even on large, tangled dependency trees.
       </p>
       <div class="cmd-table-wrap">
         <table class="cmd-table">
@@ -613,6 +613,10 @@ footer {
             <tr><td>graph</td><td>Visualize the dependency graph</td></tr>
             <tr><td>trace</td><td>Step through the resolution process</td></tr>
             <tr><td>dump</td><td>Dump the project state as JSON</td></tr>
+            <tr><td>bot-setup</td><td>Set up the PR bot for this repository</td></tr>
+            <tr><td>bot-check</td><td>Check for dependency updates, no PRs created</td></tr>
+            <tr><td>bot-run</td><td>Open GitHub pull requests for dependency updates</td></tr>
+            <tr><td>bot-config</td><td>Show or initialize bot configuration</td></tr>
           </tbody>
         </table>
       </div>
@@ -770,12 +774,7 @@ cd SDP_2026</pre>
     <div class="footer-inner" style="grid-template-columns:1fr;">
       <div class="footer-brand">
         <h3>⬡ Vertex</h3>
-        <p>Lamija Fatić · 2026 · Diploma thesis, Faculty of Electrical Engineering, University of Sarajevo</p>
       </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2026 Lamija Fatić</span>
-      <span style="color:var(--text-faint)">Python 3.9+ · MIT License</span>
     </div>
   </div>
 </footer>
