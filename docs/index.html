@@ -6,6 +6,9 @@
 <meta name="description" content="A Python package manager with hypergraph-based dependency resolution. Two-phase SAT solving over role classes eliminates the exponential search space.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬡</text></svg>">
 <title>Vertex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ── tokens ──────────────────────────────────────────── */
 :root {
@@ -83,13 +86,13 @@ html { scroll-behavior: smooth; }
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: system-ui, -apple-system, "Segoe UI", Helvetica, sans-serif;
+  font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Helvetica, sans-serif;
   font-size: 16px;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
 h1, h2, h3, h4 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Fraunces", Georgia, serif;
   line-height: 1.2;
   text-wrap: balance;
   letter-spacing: -.02em;
@@ -97,7 +100,7 @@ h1, h2, h3, h4 {
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 code, pre {
-  font-family: "SF Mono", "Consolas", "Courier New", monospace;
+  font-family: "IBM Plex Mono", "SF Mono", "Consolas", monospace;
   font-size: .875em;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -120,7 +123,7 @@ nav {
   display: flex; align-items: center; justify-content: space-between;
 }
 .nav-logo {
-  font-family: Georgia, serif;
+  font-family: "Fraunces", Georgia, serif;
   font-size: 1.25rem;
   font-weight: bold;
   color: var(--accent-light);
@@ -161,7 +164,7 @@ nav {
   padding: 4px 12px;
   border-radius: 3px;
   margin-bottom: 24px;
-  font-family: "SF Mono", monospace;
+  font-family: "IBM Plex Mono", "SF Mono", monospace;
 }
 .hero h1 {
   font-size: clamp(3rem, 5vw, 4.5rem);
@@ -231,7 +234,7 @@ nav {
 }
 .stat-item:last-child { border-right: none; }
 .stat-num {
-  font-family: Georgia, serif;
+  font-family: "Fraunces", Georgia, serif;
   font-size: 2.75rem;
   font-weight: bold;
   color: var(--accent);
@@ -255,7 +258,7 @@ section:nth-child(even) { background: var(--bg-alt); }
   letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--accent);
-  font-family: "SF Mono", monospace;
+  font-family: "IBM Plex Mono", "SF Mono", monospace;
   margin-bottom: 12px;
 }
 .section-title {
@@ -315,7 +318,7 @@ section:nth-child(even) { background: var(--bg-alt); }
   display: flex; align-items: center; gap: 14px;
 }
 .phase-badge {
-  font-family: "SF Mono", monospace;
+  font-family: "IBM Plex Mono", "SF Mono", monospace;
   font-size: .75rem;
   padding: 4px 10px;
   border-radius: 3px;
@@ -325,7 +328,7 @@ section:nth-child(even) { background: var(--bg-alt); }
 .phase-a .phase-badge { background: rgba(43,107,72,.15); color: var(--accent-mid); }
 .phase-b .phase-badge { background: rgba(160,113,30,.12); color: var(--gold); }
 .phase-title {
-  font-family: Georgia, serif;
+  font-family: "Fraunces", Georgia, serif;
   font-size: 1.05rem;
   color: var(--text);
 }
@@ -338,7 +341,7 @@ section:nth-child(even) { background: var(--bg-alt); }
   border-radius: 0 4px 4px 0;
   font-size: .82rem;
   color: var(--text-muted);
-  font-family: "SF Mono", monospace;
+  font-family: "IBM Plex Mono", "SF Mono", monospace;
   line-height: 1.6;
 }
 .phase-a .phase-detail { border-left-color: var(--accent); }
@@ -493,7 +496,7 @@ footer {
   margin-bottom: 48px;
 }
 .footer-brand h3 {
-  font-family: Georgia, serif;
+  font-family: "Fraunces", Georgia, serif;
   color: var(--accent-light);
   font-size: 1.25rem;
   margin-bottom: 10px;
@@ -554,9 +557,9 @@ footer {
 <section class="hero">
   <div class="hero-content container" style="max-width:560px; padding-left:max(32px, calc((100vw - 1100px)/2 + 32px))">
     <div class="hero-eyebrow">Python Package Manager</div>
-    <h1>Arb<span>or</span></h1>
+    <h1>Ver<span>tex</span></h1>
     <p class="hero-sub">
-      Dependency resolution built on a hypergraph model. Two-phase SAT solving over compressed role classes eliminates the exponential search space that backtracking-based resolvers cannot escape.
+      Dependency resolution modeled as a hypergraph. Two-phase SAT solving over compressed role classes — no exponential backtracking.
     </p>
     <div class="hero-actions">
       <a href="#install" class="btn btn-primary">Get Started</a>
@@ -574,15 +577,15 @@ footer {
     <div class="stats-grid">
       <div class="stat-item">
         <div class="stat-num">2171<span class="stat-unit">×</span></div>
-        <div class="stat-label">Speedup over backtracking at n=12 diamond conflict</div>
+        <div class="stat-label">faster than backtracking, n=12 diamond conflict</div>
       </div>
       <div class="stat-item">
         <div class="stat-num">8<span class="stat-unit">/8</span></div>
-        <div class="stat-label">Test cases passing across all resolution scenarios</div>
+        <div class="stat-label">correctness tests passing</div>
       </div>
       <div class="stat-item">
         <div class="stat-num">3</div>
-        <div class="stat-label">Resolver strategies: Hypergraph, SAT, Backtracking</div>
+        <div class="stat-label">solvers: Hypergraph, SAT, Backtracking</div>
       </div>
     </div>
   </div>
@@ -592,25 +595,25 @@ footer {
 <section id="about">
   <div class="container">
     <div class="section-eyebrow">Overview</div>
-    <h2 class="section-title">A package manager built around the hard problem</h2>
+    <h2 class="section-title">Resolution as constraint satisfaction, not search</h2>
     <p class="section-lead">
-      Most package managers treat dependency resolution as a search problem and hope the graph is simple enough. Vertex treats it as a constraint satisfaction problem from the start.
+      Most resolvers search and hope the graph stays simple. Vertex encodes it as a constraint problem from the first step.
     </p>
     <div class="about-grid">
       <div class="about-card">
         <span class="about-icon">⬡</span>
         <h3>Hypergraph model</h3>
-        <p>Packages and versions are nodes. Dependency constraints are hyperedges connecting source versions to all valid target versions simultaneously. The graph encodes the full constraint structure before any search begins.</p>
+        <p>Packages and versions are nodes; constraints are hyperedges. The full structure is encoded before any search starts.</p>
       </div>
       <div class="about-card">
         <span class="about-icon">◎</span>
         <h3>Role class compression</h3>
-        <p>Versions with identical dependency signatures are grouped into role classes. The SAT solver operates on k role class variables rather than n·v individual version variables, dramatically reducing the search space.</p>
+        <p>Versions with identical dependency signatures collapse into one role class — SAT reasons over k variables, not n·v.</p>
       </div>
       <div class="about-card">
         <span class="about-icon">⊕</span>
         <h3>Layered architecture</h3>
-        <p>Domain, application, infrastructure, and CLI layers with strict inward dependency rules. The resolution algorithm is completely independent of file formats, network access, and command-line parsing.</p>
+        <p>Domain, application, infrastructure, and CLI, strictly separated. The algorithm has no idea files or a terminal exist.</p>
       </div>
     </div>
   </div>
@@ -620,14 +623,14 @@ footer {
 <section id="algorithm">
   <div class="container">
     <div class="section-eyebrow">Algorithm</div>
-    <h2 class="section-title">Two-phase hypergraph resolution</h2>
+    <h2 class="section-title">Two phases, two levels of abstraction</h2>
     <p class="section-lead">
-      Resolution proceeds in two phases operating at different levels of abstraction. Phase A finds a satisfying role class assignment. Phase B selects concrete versions within that assignment.
+      Phase A finds a satisfying role class assignment. Phase B picks concrete versions within it.
     </p>
     <div class="algo-layout">
       <div class="about-card algo-overview" style="grid-column:1/-1">
-        <p>Given a dependency graph with n packages and v versions each, the hypergraph H = (V, E) is constructed where each node is a (package, version) pair and each hyperedge encodes the constraint that selecting a source version requires one of the target versions. Versions with identical incidence signatures σ(v) are grouped into k role classes, where k ≤ n·v and typically k ≈ n in real package graphs.</p>
-        <p>The iterative loop runs at most k+1 times. A blocked set B grows monotonically across iterations, guaranteeing termination. Each iteration either returns a valid solution or proves the problem unsatisfiable.</p>
+        <p>H = (V, E): each node is a (package, version) pair, each hyperedge a constraint. Versions with identical incidence signatures σ(v) collapse into k role classes, k ≤ n·v.</p>
+        <p>The loop runs at most k+1 times. A blocked set grows each iteration until it returns a solution — or proves there isn't one.</p>
       </div>
       <div class="phase-card phase-a">
         <div class="phase-header">
@@ -635,12 +638,11 @@ footer {
           <span class="phase-title">Role Class SAT</span>
         </div>
         <div class="phase-body">
-          <p>The reduced role hypergraph R(H) is built by lifting edges to the role class level. A SAT formula over k boolean variables is constructed with at-least-one clauses per required package, implication clauses encoding dependency propagation, and unit clauses blocking previously failed role classes.</p>
-          <p>minisat22 solves the formula. If UNSAT, the problem has no solution. If SAT, the selected role class IDs are passed to Phase B.</p>
+          <p>The role hypergraph R(H) is built by lifting edges to role-class level, then solved by minisat22 — coverage, propagation, and blocking clauses over k boolean variables. UNSAT means no solution exists.</p>
           <div class="phase-detail">
-Construction cost:  O(k·m)<br>
-SAT solving:        O(2^k) worst case<br>
-Practical cost:     O(k·m) with unit prop
+Construction:   O(k·m)<br>
+SAT solving:    O(2^k) worst case<br>
+In practice:    O(k·m) via unit prop
           </div>
         </div>
       </div>
@@ -650,12 +652,11 @@ Practical cost:     O(k·m) with unit prop
           <span class="phase-title">Version Selection</span>
         </div>
         <div class="phase-body">
-          <p>Packages are sorted topologically. For each package, candidates in the Phase A role class are tried newest-first. A candidate is accepted when it passes backward constraint checks (constraints imposed by already-assigned packages) and forward checks (constraints this version imposes on its dependencies).</p>
-          <p>If a package exhausts all candidates, the deepest failing role class is added to the blocked set and Phase A runs again with the updated blocking clauses.</p>
+          <p>Packages in topological order, newest candidate first, accepted only if it survives backward and forward constraint checks. A dead end blocks the failing role class and kicks back to Phase A.</p>
           <div class="phase-detail">
-Topological sort:   O(n + m)<br>
-Version selection:  O(n·v) best case<br>
-                    O(n·v²) worst case
+Topo sort:      O(n + m)<br>
+Selection:      O(n·v) best case<br>
+                O(n·v²) worst case
           </div>
         </div>
       </div>
@@ -752,7 +753,7 @@ Version selection:  O(n·v) best case<br>
       </table>
     </div>
     <p style="font-size:.8rem; color:var(--text-faint); margin-top:14px;">
-      On conflict-free scenarios, backtracking wins — one linear pass with no recovery overhead. On diamond conflict patterns, the hypergraph resolver's structural advantage compounds with n.
+      Conflict-free: backtracking wins, no recovery needed. With real conflicts, the hypergraph's advantage compounds with n.
     </p>
   </div>
 </section>
@@ -762,7 +763,7 @@ Version selection:  O(n·v) best case<br>
   <div class="container">
     <div class="section-eyebrow">Installation</div>
     <h2 class="section-title">Get Vertex running</h2>
-    <p class="section-lead">Vertex requires Python 3.9 or higher. The only mandatory runtime dependencies are <code>python-sat</code> and <code>toml</code>.</p>
+    <p class="section-lead">Requires Python 3.9+. Only two runtime dependencies: <code>python-sat</code> and <code>toml</code>.</p>
 
     <div style="max-width:720px">
       <div class="tabs">
@@ -906,7 +907,7 @@ cd SDP_2026</pre>
   <div class="container">
     <div class="section-eyebrow">Quick Start</div>
     <h2 class="section-title">Up and running in two minutes</h2>
-    <p class="section-lead">Create a project, add dependencies, resolve, and install — all from the same tool.</p>
+    <p class="section-lead">Init, add, resolve, install — one tool, no context switching.</p>
     <div class="quickstart-grid">
       <div class="qs-block">
         <h3>Project setup</h3>
@@ -972,8 +973,8 @@ vertex conflicts</pre>
     <div class="footer-inner">
       <div class="footer-brand">
         <h3>⬡ Vertex</h3>
-        <p>A Python package manager with formal modeling of constraint-based dependency resolution. Built as a diploma thesis at the Faculty of Electrical Engineering, University of Sarajevo.</p>
-        <p style="margin-top:12px">Author: Lamija Fatić · 2026</p>
+        <p>A package manager that models dependency resolution as a hypergraph constraint problem. Diploma thesis, Faculty of Electrical Engineering, University of Sarajevo.</p>
+        <p style="margin-top:12px">Lamija Fatić · 2026</p>
       </div>
       <div class="footer-col">
         <h4>Documentation</h4>
