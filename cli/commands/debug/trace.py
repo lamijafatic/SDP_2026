@@ -1,5 +1,5 @@
 """
-vertex trace — step-by-step trace of the hypergraph resolution process
+vertex trace, step-by-step trace of the hypergraph resolution process
 on the current project's actual dependencies.
 """
 from core.ui import (
@@ -29,13 +29,13 @@ def run(args):
     print(c(f"  Project has {len(deps)} direct dependencies.\n", DIM))
 
     # ── Step 1: Build graph ───────────────────────────────────────────────────
-    print(c("  Step 1 — Build dependency graph\n", BOLD, BRIGHT_WHITE))
+    print(c("  Step 1, Build dependency graph\n", BOLD, BRIGHT_WHITE))
     sp = Spinner("Fetching versions and building constraint graph...")
     sp.start()
     repo  = SmartRepository()
     gsvc  = GraphService(repo)
     graph = gsvc.build_graph(deps)
-    sp.stop(success=True, msg=f"Graph built — {len(graph.dependencies)} packages, "
+    sp.stop(success=True, msg=f"Graph built, {len(graph.dependencies)} packages, "
             f"{sum(len(graph.get_candidates(p)) for p in graph.dependencies)} total candidates")
 
     print()
@@ -48,7 +48,7 @@ def run(args):
 
     # ── Step 2: Build hypergraph ──────────────────────────────────────────────
     print()
-    print(c("  Step 2 — Build hypergraph  H = (V, E)\n", BOLD, BRIGHT_WHITE))
+    print(c("  Step 2, Build hypergraph  H = (V, E)\n", BOLD, BRIGHT_WHITE))
     from model_math_trans import build_hypergraph, compute_role_classes, build_role_graph
     sp = Spinner("Building hypergraph...")
     sp.start()
@@ -58,7 +58,7 @@ def run(args):
 
     # ── Step 3: Role class decomposition ─────────────────────────────────────
     print()
-    print(c("  Step 3 — Role class decomposition\n", BOLD, BRIGHT_WHITE))
+    print(c("  Step 3, Role class decomposition\n", BOLD, BRIGHT_WHITE))
     sp = Spinner("Computing role classes...")
     sp.start()
     roles               = compute_role_classes(H)
@@ -84,7 +84,7 @@ def run(args):
 
     # ── Step 4: Phase A SAT ───────────────────────────────────────────────────
     print()
-    print(c("  Step 4 — Phase A: SAT skeleton resolution\n", BOLD, BRIGHT_WHITE))
+    print(c("  Step 4, Phase A: SAT skeleton resolution\n", BOLD, BRIGHT_WHITE))
     from model_math_trans import phase_a_solve
 
     required = set(deps.keys())
@@ -93,24 +93,24 @@ def run(args):
     selected_ids = phase_a_solve(roles, role_deps, role_cfl, required, blocked=set())
     sp.stop(
         success=selected_ids is not None,
-        msg=f"SAT — {len(selected_ids)} role classes selected" if selected_ids else "UNSAT"
+        msg=f"SAT, {len(selected_ids)} role classes selected" if selected_ids else "UNSAT"
     )
 
     if selected_ids is None:
         print()
-        print(warn("Phase A: UNSAT — constraints are fundamentally unsatisfiable."))
+        print(warn("Phase A: UNSAT, constraints are fundamentally unsatisfiable."))
         return 1
 
     # ── Step 5: Phase B version selection ────────────────────────────────────
     print()
-    print(c("  Step 5 — Phase B: concrete version selection\n", BOLD, BRIGHT_WHITE))
+    print(c("  Step 5, Phase B: concrete version selection\n", BOLD, BRIGHT_WHITE))
     from model_math_trans import solve_phased
 
     sp = Spinner("Selecting concrete versions (newest-first backtrack within skeleton)...")
     sp.start()
     solution = solve_phased(H, graph, required)
     sp.stop(success=solution is not None,
-            msg="Solution found" if solution else "No solution — constraints unsatisfiable")
+            msg="Solution found" if solution else "No solution, constraints unsatisfiable")
 
     if solution is None:
         print()

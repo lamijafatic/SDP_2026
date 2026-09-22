@@ -28,7 +28,7 @@ def run(args):
         rows = [[pkg, ver, c("would install", "\033[93m")] for pkg, ver in packages.items()]
         from core.ui import table
         table(["Package", "Version", "Action"], rows)
-        print(info("Dry run — nothing was installed."))
+        print(info("Dry run, nothing was installed."))
         return 0
 
     env_svc = EnvironmentService()

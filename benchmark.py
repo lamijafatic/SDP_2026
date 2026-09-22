@@ -19,7 +19,7 @@ from domain.models.constraint import Constraint
 
 REAL_GROUPS = {
     "small": {
-        "label": "Small  — 3 direct deps (requests stack)",
+        "label": "Small, 3 direct deps (requests stack)",
         "deps": {
             "requests": ">=2.28.0",
             "numpy":    ">=1.24.0",
@@ -27,7 +27,7 @@ REAL_GROUPS = {
         },
     },
     "medium": {
-        "label": "Medium — 6 direct deps (data science stack)",
+        "label": "Medium, 6 direct deps (data science stack)",
         "deps": {
             "numpy":        ">=1.24.0",
             "pandas":       ">=1.5.0",
@@ -38,7 +38,7 @@ REAL_GROUPS = {
         },
     },
     "large": {
-        "label": "Large  — 8 direct deps (ML stack)",
+        "label": "Large, 8 direct deps (ML stack)",
         "deps": {
             "numpy":        ">=1.24.0",
             "pandas":       ">=1.5.0",
@@ -51,7 +51,7 @@ REAL_GROUPS = {
         },
     },
     "xlarge": {
-        "label": "XLarge — 15 direct deps (full stack)",
+        "label": "XLarge, 15 direct deps (full stack)",
         "deps": {
             "numpy":        ">=1.24.0",
             "pandas":       ">=1.5.0",
@@ -125,10 +125,10 @@ class SyntheticGraph:
 
 
 SYNTHETIC_CASES = [
-    {"label": "Synthetic S   — 20 pkgs × 10 versions, tight chain",           "n": 20,  "v": 10, "c": 0},
-    {"label": "Synthetic M   — 50 pkgs × 10 versions, tight chain",           "n": 50,  "v": 10, "c": 0},
-    {"label": "Synthetic L   — 100 pkgs × 10 versions, tight chain",          "n": 100, "v": 10, "c": 0},
-    {"label": "Synthetic LC  — 100 pkgs × 10 versions, chain + 10 conflicts", "n": 100, "v": 10, "c": 10},
+    {"label": "Synthetic S, 20 pkgs × 10 versions, tight chain",           "n": 20,  "v": 10, "c": 0},
+    {"label": "Synthetic M, 50 pkgs × 10 versions, tight chain",           "n": 50,  "v": 10, "c": 0},
+    {"label": "Synthetic L, 100 pkgs × 10 versions, tight chain",          "n": 100, "v": 10, "c": 0},
+    {"label": "Synthetic LC, 100 pkgs × 10 versions, chain + 10 conflicts", "n": 100, "v": 10, "c": 10},
 ]
 
 
@@ -172,15 +172,15 @@ class DiamondConflictGraph:
 
 
 DIAMOND_CASES = [
-    {"label": "Diamond 1   —  1+1  frameworks + core",  "n": 1},
-    {"label": "Diamond 2   —  2+2  frameworks + core",  "n": 2},
-    {"label": "Diamond 3   —  3+3  frameworks + core",  "n": 3},
-    {"label": "Diamond S   —  5+5  frameworks + core",  "n": 5},
-    {"label": "Diamond M   — 10+10 frameworks + core",  "n": 10},
-    {"label": "Diamond L   — 12+12 frameworks + core",  "n": 12},
-    {"label": "Diamond XL  — 15+15 frameworks + core",  "n": 15},
-    {"label": "Diamond XXL — 25+25 frameworks + core",  "n": 25},
-    {"label": "Diamond 3XL — 50+50 frameworks + core",  "n": 50},
+    {"label": "Diamond 1, 1+1  frameworks + core",  "n": 1},
+    {"label": "Diamond 2, 2+2  frameworks + core",  "n": 2},
+    {"label": "Diamond 3, 3+3  frameworks + core",  "n": 3},
+    {"label": "Diamond S, 5+5  frameworks + core",  "n": 5},
+    {"label": "Diamond M, 10+10 frameworks + core",  "n": 10},
+    {"label": "Diamond L, 12+12 frameworks + core",  "n": 12},
+    {"label": "Diamond XL, 15+15 frameworks + core",  "n": 15},
+    {"label": "Diamond XXL, 25+25 frameworks + core",  "n": 25},
+    {"label": "Diamond 3XL, 50+50 frameworks + core",  "n": 50},
 ]
 
 
@@ -281,7 +281,7 @@ def _print_table(label: str, pkg_count: int, runs: int, results: dict):
     for strategy in STRATEGIES:
         data = results[strategy]
         if data.get("skipped"):
-            print(f"  {strategy:<14} {'—':>10} {'—':>10} {'—':>10}  not run (>24h projected)")
+            print(f"  {strategy:<14} {', ':>10} {', ':>10} {', ':>10}  not run (>24h projected)")
             continue
         if data["failed"] or not data["times"]:
             print(f"  {strategy:<14} {'FAILED':>10}")
@@ -294,7 +294,7 @@ def _print_table(label: str, pkg_count: int, runs: int, results: dict):
 
 def _print_summary(all_entries: list):
     print(f"\n{'═' * 66}")
-    print("  SUMMARY — Median solver-only times")
+    print("  SUMMARY, Median solver-only times")
     print(f"{'─' * 66}")
     print(f"  {'Scenario':<36}  {'SAT':>9}  {'BT':>9}  {'HG':>9}  Fastest")
     print(f"  {'-'*36}  {'-'*9}  {'-'*9}  {'-'*9}  {'-'*11}")
@@ -306,7 +306,7 @@ def _print_summary(all_entries: list):
                 row[s] = float("inf")
             else:
                 row[s] = _median(d["times"])
-        fastest = min((s for s in row if row[s] < float("inf")), key=row.get, default="—")
+        fastest = min((s for s in row if row[s] < float("inf")), key=row.get, default=", ")
         def _show(s):
             v = row[s]
             return "  >24h" if v == float("inf") and results[s].get("skipped") else (
@@ -411,7 +411,7 @@ def generate_plots(all_entries: list):
         import matplotlib.ticker as ticker
         import numpy as np
     except ImportError:
-        print("  [plots skipped — pip install matplotlib]\n")
+        print("  [plots skipped, pip install matplotlib]\n")
         return
 
     BASE = os.path.dirname(os.path.abspath(__file__))
@@ -430,9 +430,9 @@ def generate_plots(all_entries: list):
 
     # ── Shared palette & style ────────────────────────────────────────────────
     C = {
-        "hg":       "#16A34A",   # green — Hypergraph
-        "sat":      "#2563EB",   # blue  — SAT
-        "bt":       "#DC2626",   # red   — Backtracking
+        "hg":       "#16A34A",   # green, Hypergraph
+        "sat":      "#2563EB",   # blue, SAT
+        "bt":       "#DC2626",   # red, Backtracking
         "phase_a":  "#15803D",   # dark green
         "phase_b":  "#86EFAC",   # light green
         "gray":     "#6B7280",
@@ -497,7 +497,7 @@ def generate_plots(all_entries: list):
     has_diam  = bool(diamond_e)
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # Figure 1 — Diamond conflict scaling (all n, log scale)
+    # Figure 1, Diamond conflict scaling (all n, log scale)
     # ═══════════════════════════════════════════════════════════════════════════
     if has_diam:
         fig, ax = plt.subplots(figsize=(13, 6))
@@ -571,7 +571,7 @@ def generate_plots(all_entries: list):
         ax.axhline(1,    color=C["gray"], linestyle=":", linewidth=0.9,
                    alpha=0.45, label="1 ms")
 
-        # Theory annotations — right margin
+        # Theory annotations, right margin
         for y_frac, txt, col in [
             (0.93, "O(v^n)  exponential",   C["bt"]),
             (0.62, "O(n v m)  polynomial",  C["sat"]),
@@ -596,7 +596,7 @@ def generate_plots(all_entries: list):
         _save_open(fig, "benchmark_01_scaling.png")
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # Figure 2 — Small-n close-up (n=1 to n=5, BT wins region)
+    # Figure 2, Small-n close-up (n=1 to n=5, BT wins region)
     # ═══════════════════════════════════════════════════════════════════════════
     if has_diam:
         small_e = [e for e in diamond_e if (get_n(e) or 99) <= 5]
@@ -647,7 +647,7 @@ def generate_plots(all_entries: list):
             _save_open(fig, "benchmark_02_smalln.png")
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # Figure 3 — BT / HG speedup ratio (bar chart, log scale)
+    # Figure 3, BT / HG speedup ratio (bar chart, log scale)
     # ═══════════════════════════════════════════════════════════════════════════
     spd_lbls, bt_ratios, sat_ratios = [], [], []
     for e in all_entries:
@@ -694,7 +694,7 @@ def generate_plots(all_entries: list):
         _save_open(fig, "benchmark_03_speedup_bt.png")
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # Figure 4 — SAT / HG speedup ratio
+    # Figure 4, SAT / HG speedup ratio
     # ═══════════════════════════════════════════════════════════════════════════
     if spd_lbls:
         y_pos = np.arange(len(spd_lbls))
@@ -723,7 +723,7 @@ def generate_plots(all_entries: list):
         _save_open(fig, "benchmark_04_speedup_sat.png")
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # Figure 5 — Conflict-free vs conflict-heavy comparison
+    # Figure 5, Conflict-free vs conflict-heavy comparison
     # ═══════════════════════════════════════════════════════════════════════════
     if synth_e or real_e:
         compare_groups = []
@@ -769,7 +769,7 @@ def generate_plots(all_entries: list):
             _save_open(fig, "benchmark_05_conflict_free.png")
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # Figure 6 — Role class compression: |V| vs k
+    # Figure 6, Role class compression: |V| vs k
     # ═══════════════════════════════════════════════════════════════════════════
     if has_diam:
         comp_ns, total_vs, k_vals, pcts = [], [], [], []
@@ -827,7 +827,7 @@ def generate_plots(all_entries: list):
             _save_open(fig, "benchmark_06_compression.png")
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # Figure 7 — HG internal phase breakdown (Phase A + Phase B stacked bars)
+    # Figure 7, HG internal phase breakdown (Phase A + Phase B stacked bars)
     # ═══════════════════════════════════════════════════════════════════════════
     if has_diam:
         ph_ns, ph_a, ph_b, ph_tot = [], [], [], []
@@ -847,11 +847,11 @@ def generate_plots(all_entries: list):
 
             # Left: absolute stacked
             bars_a = ax_stk.bar(x_ph, ph_a, color=C["phase_a"], alpha=0.93,
-                                label="Phase A  —  SAT on k role-class variables",
+                                label="Phase A, SAT on k role-class variables",
                                 edgecolor="white", linewidth=0.4, zorder=3)
             bars_b = ax_stk.bar(x_ph, ph_b, bottom=ph_a,
                                 color=C["phase_b"], alpha=0.93,
-                                label="Phase B  —  Concrete version selection",
+                                label="Phase B, Concrete version selection",
                                 edgecolor="white", linewidth=0.4, zorder=3)
 
             for bar, val in zip(bars_a, ph_a):
@@ -905,7 +905,7 @@ def generate_plots(all_entries: list):
             _save_open(fig, "benchmark_07_phases.png")
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # Figure 8 — Theory vs empirical: fitted curves over actual data
+    # Figure 8, Theory vs empirical: fitted curves over actual data
     # ═══════════════════════════════════════════════════════════════════════════
     if has_diam and len(diamond_e) >= 3:
         from scipy.optimize import curve_fit
@@ -940,7 +940,7 @@ def generate_plots(all_entries: list):
                   lambda x, a, b: a * np.exp(b * x),
                   "a * exp(b * n)",
                   C["bt"],
-                  "Backtracking: Exponential\nO(v^n) — grows without bound")
+                  "Backtracking: Exponential\nO(v^n), grows without bound")
 
         # SAT: polynomial (quadratic)
         sat_ys = np.array([mv(e, "sat") for e in diamond_e])
@@ -948,7 +948,7 @@ def generate_plots(all_entries: list):
                   lambda x, a, b: a * x ** b,
                   "a * n^b",
                   C["sat"],
-                  "SAT: Polynomial\nO(n v m) — manageable growth")
+                  "SAT: Polynomial\nO(n v m), manageable growth")
 
         # HG: near-linear / sub-linear
         hg_ys = np.array([mv(e, "hypergraph") for e in diamond_e])
@@ -956,7 +956,7 @@ def generate_plots(all_entries: list):
                   lambda x, a, b: a * x ** b,
                   "a * n^b  (b < 1)",
                   C["hg"],
-                  "Hypergraph: Near-Linear\nO(k^2 m) — role-class compression flattens growth")
+                  "Hypergraph: Near-Linear\nO(k^2 m), role-class compression flattens growth")
 
         fig.suptitle("Theory vs Empirical: Fitted Growth Curves",
                      fontsize=13, fontweight="bold", y=1.02)

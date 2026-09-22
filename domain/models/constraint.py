@@ -30,7 +30,7 @@ class Constraint:
                 continue
             ver_str = ver_clean.group(1)
 
-            # ~= X.Y[.Z] means >= X.Y[.Z] AND < X.(Y+1) — compatible release.
+            # ~= X.Y[.Z] means >= X.Y[.Z] AND < X.(Y+1), compatible release.
             # Example: ~=2.28 → >=2.28, <3     (drop last segment, bump previous)
             #          ~=1.4.2 → >=1.4.2, <1.5
             if op == "~=":
@@ -44,7 +44,7 @@ class Constraint:
                     except Exception:
                         pass
                 else:
-                    # ~=X (single segment) — not valid PEP 440, fall back to >=
+                    # ~=X (single segment), not valid PEP 440, fall back to >=
                     try:
                         conditions.append((">=", Version(ver_str)))
                     except Exception:

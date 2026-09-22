@@ -15,7 +15,7 @@ def run(args):
 
     if not os.path.exists("setup.py") and not os.path.exists("pyproject.toml"):
         print(warn("No setup.py or pyproject.toml found."))
-        print(info("A setup.py already exists in this project — trying anyway."))
+        print(info("A setup.py already exists in this project, trying anyway."))
 
     d = svc.get_project_info()
     print(info(f"Building {bold(d['name'])} v{d['version']}"))

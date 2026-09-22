@@ -40,10 +40,10 @@ def run(args):
     print()
 
     print(c("  Next steps:", DIM))
-    print(c(f"    vertex add numpy '>=1.20'   — add a dependency", DIM))
-    print(c(f"    vertex resolve              — resolve constraints (hypergraph solver)", DIM))
-    print(c(f"    vertex install              — install dependencies into .venv", DIM))
-    print(c(f"    vertex stat                 — see algorithm efficiency report", DIM))
-    print(c(f"    vertex demo                 — walk through the algorithm interactively", DIM))
+    print(c(f"    vertex add numpy '>=1.20', add a dependency", DIM))
+    print(c(f"    vertex resolve, resolve constraints (hypergraph solver)", DIM))
+    print(c(f"    vertex install, install dependencies into .venv", DIM))
+    print(c(f"    vertex stat, see algorithm efficiency report", DIM))
+    print(c(f"    vertex demo, walk through the algorithm interactively", DIM))
     print()
     return 0

@@ -4,7 +4,7 @@ import argparse
 def parse_args():
     parser = argparse.ArgumentParser(
         prog="vertex",
-        description="Vertex — Python Package Manager with Hypergraph Dependency Resolution",
+        description="Vertex, Python Package Manager with Hypergraph Dependency Resolution",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
@@ -101,7 +101,7 @@ def parse_args():
     # ── Analysis ─────────────────────────────────────────────
     p_test = sub.add_parser(
         "test",
-        help="Full resolver benchmark — all scenarios, detailed tables, and comparison plots",
+        help="Full resolver benchmark, all scenarios, detailed tables, and comparison plots",
     )
     p_test.add_argument(
         "--mode",
@@ -118,7 +118,7 @@ def parse_args():
     p_test.add_argument(
         "--quick",
         action="store_true",
-        help="Diamond conflicts only, 5 runs — fastest meaningful comparison",
+        help="Diamond conflicts only, 5 runs, fastest meaningful comparison",
     )
     p_test.add_argument(
         "--no-plot",
@@ -129,12 +129,12 @@ def parse_args():
 
     sub.add_parser(
         "stat",
-        help="Live algorithm efficiency benchmark — bar charts, speedups, complexity",
+        help="Live algorithm efficiency benchmark, bar charts, speedups, complexity",
     )
 
     p_demo = sub.add_parser(
         "demo",
-        help="Interactive algorithm walkthrough — step through a diamond conflict example",
+        help="Interactive algorithm walkthrough, step through a diamond conflict example",
     )
     p_demo.add_argument(
         "--auto",

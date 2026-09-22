@@ -13,6 +13,7 @@ application/services/import_service.py
 application/services/lock_service.py
 application/services/pr_bot_service.py
 application/services/project_service.py
+application/services/report_service.py
 application/services/resolution_service.py
 application/services/update_checker_service.py
 application/use_cases/add_dependency.py
@@ -112,6 +113,7 @@ infrastructure/repository/local_repo.py
 infrastructure/repository/pypi_adapter.py
 infrastructure/repository/pypi_repo.py
 infrastructure/repository/smart_repo.py
+tests/test_correctness.py
 tests/test_system_requirements.py
 vertex_pm.egg-info/PKG-INFO
 vertex_pm.egg-info/SOURCES.txt

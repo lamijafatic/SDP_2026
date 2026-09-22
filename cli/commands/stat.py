@@ -1,5 +1,5 @@
 """
-vertex stat — live algorithm efficiency report.
+vertex stat, live algorithm efficiency report.
 
 Runs an in-memory diamond-conflict benchmark (no file I/O) and displays
 ASCII bar charts, role-class compression stats, and a complexity table.
@@ -119,13 +119,13 @@ def run(args):
         {"n": 10, "label": "Diamond n=10  (21 packages)"},
         {"n": 12, "label": "Diamond n=12  (25 packages)"},
     ]
-    # HG-only scale check — BT skipped, just shows how HG holds up
+    # HG-only scale check, BT skipped, just shows how HG holds up
     SCALE_CASES = [
         {"n": 25, "label": "n=25  (51 packages)"},
         {"n": 50, "label": "n=50 (101 packages)"},
     ]
 
-    print(c(f"  Live benchmark — {RUNS} runs, median, solver-only timing (no I/O)", DIM))
+    print(c(f"  Live benchmark, {RUNS} runs, median, solver-only timing (no I/O)", DIM))
     print(c("  Backtracking skipped for n > 12 (projected > 24 h at that scale).\n", DIM))
 
     results = []
@@ -181,7 +181,7 @@ def run(args):
     # ── HG-only scaling for large n ────────────────────────────────────────────
     divider()
     print()
-    print(c("  HG scaling at larger n  (BT not run — projected > 24 h):\n", DIM))
+    print(c("  HG scaling at larger n  (BT not run, projected > 24 h):\n", DIM))
 
     scale_rows = []
     for sc in SCALE_CASES:
@@ -211,7 +211,7 @@ def run(args):
     rows = [
         ["Backtracking",
          "O(v^n)",
-         "Naive search — tries all version combinations",
+         "Naive search, tries all version combinations",
          "Exponential. Unusable on conflict-heavy graphs."],
         ["SAT",
          "O(n·v·m)",

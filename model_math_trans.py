@@ -250,7 +250,7 @@ def compute_role_classes(H: HyperGraph) -> list:
     (same target incidence signature → same "role" in the dependency structure).
 
     Packages with an empty target signature (not required by any dep edge) are
-    grouped by package name alone — they are root/leaf packages.
+    grouped by package name alone, they are root/leaf packages.
     """
     # Compute target signature: set of dep-edge indices where p appears as target
     target_sig: dict = {}
@@ -349,7 +349,7 @@ def phase_a_solve(
     blocked: set,
 ) -> Optional[list]:
     """
-    Phase A: SAT over role classes — determines which role classes (package types)
+    Phase A: SAT over role classes, determines which role classes (package types)
     must be active to satisfy all required names and their transitive deps.
 
     SAT variables: x_i = 1 iff role class i is selected.
@@ -381,7 +381,7 @@ def phase_a_solve(
     for name in required_names:
         active = [rid for rid in name_to_rids.get(name, []) if rid not in blocked]
         if not active:
-            cnf.append([])  # Force UNSAT — no role class can cover this name
+            cnf.append([])  # Force UNSAT, no role class can cover this name
         else:
             cnf.append([var(rid) for rid in active])
 
@@ -481,7 +481,7 @@ def _is_version_valid(
     cand_ver = Version(candidate.version)
     cand_key = (pkg_name, candidate.version)
 
-    # Conflict check — O(1) with lookup, O(|E|) fallback for backward compat
+    # Conflict check, O(1) with lookup, O(|E|) fallback for backward compat
     if conflict_lookup is not None:
         for cn, cv in conflict_lookup.get(cand_key, ()):
             if solution.get(cn) == cv:
@@ -524,7 +524,7 @@ def _dependency_neighbors(H: HyperGraph) -> dict:
     which packages a given package's validity check can actually depend on.
 
     Used by phase_b_select to identify, for every package, which earlier
-    packages its outcome can actually depend on — and, symmetrically,
+    packages its outcome can actually depend on, and, symmetrically,
     which earlier packages are irrelevant to it and to everything after it.
     """
     neighbors: dict = defaultdict(set)
@@ -550,7 +550,7 @@ def phase_b_select(
 
     Uses backtracking (newest-first) over the topological package order.
     A package's outcome only ever depends on the earlier packages it shares
-    a dependency or conflict edge with — never on an unrelated package
+    a dependency or conflict edge with, never on an unrelated package
     sitting between it and something it is actually connected to. Without
     memoization, plain chronological backtracking still retries every
     combination of those unrelated packages once per failed attempt at the
@@ -596,7 +596,7 @@ def phase_b_select(
                 deduped.append(c)
         candidates_per_name[pkg_name] = deduped
 
-    # O(|E|) once — gives O(1) per-candidate conflict check inside backtracking
+    # O(|E|) once, gives O(1) per-candidate conflict check inside backtracking
     conflict_lookup = _build_conflict_lookup(H)
 
     # For each position, the earlier positions its own validity check can
@@ -610,7 +610,7 @@ def phase_b_select(
     ]
 
     # relevant_before[idx]: earlier positions that matter to *anything* from
-    # idx to the end, not just to idx itself — the union of every later
+    # idx to the end, not just to idx itself, the union of every later
     # position's own parents, restricted to positions before idx. This is
     # what two different solutions must agree on for backtrack(idx, ...) to
     # be guaranteed to end the same way.
@@ -644,7 +644,7 @@ def phase_b_select(
                 result = backtrack(idx + 1, {**solution, pkg_name: candidate.version})
                 if result is not None:
                     return result
-        # All candidates at this index exhausted — record deepest failure
+        # All candidates at this index exhausted, record deepest failure
         if idx > deepest_fail[0]:
             deepest_fail[0] = idx
         if memo_key is not None:
@@ -670,8 +670,8 @@ def solve_phased(H: HyperGraph, graph, required_names: set) -> Optional[dict]:
       1. Metric Preprocessing: compute role classes from H (role decomposition).
       2. Build reduced role hypergraph.
       3. Loop:
-           Phase A — SAT on role graph → selected role class skeleton.
-           Phase B — greedy version selection → concrete solution.
+           Phase A, SAT on role graph → selected role class skeleton.
+           Phase B, greedy version selection → concrete solution.
            If Phase B fails for a role class, block it and repeat from Phase A.
 
     Returns {pkg_name: version_str} on success, or None if no solution exists.
@@ -687,7 +687,7 @@ def solve_phased(H: HyperGraph, graph, required_names: set) -> Optional[dict]:
             role_classes, role_deps, role_conflicts, required_names, blocked
         )
         if selected_ids is None:
-            return None  # Phase A UNSAT — constraints are fundamentally unsatisfiable
+            return None  # Phase A UNSAT, constraints are fundamentally unsatisfiable
 
         solution, failed_rid = phase_b_select(H, selected_ids, role_classes, graph)
         if solution is not None:

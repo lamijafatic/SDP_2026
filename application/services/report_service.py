@@ -1,10 +1,10 @@
 """
-ReportService — after a successful `vertex resolve --report`, pops up
+ReportService, after a successful `vertex resolve --report`, pops up
 three native matplotlib windows on screen (not a browser page):
 
-  1. Speed       — SAT vs Backtracking vs Hypergraph, timed on this project
-  2. Phase split — Phase A (SAT over role classes) vs Phase B (version pick)
-  3. Complexity  — theoretical O(v^n) backtracking vs O(n^2) hypergraph,
+  1. Speed, SAT vs Backtracking vs Hypergraph, timed on this project
+  2. Phase split, Phase A (SAT over role classes) vs Phase B (version pick)
+  3. Complexity, theoretical O(v^n) backtracking vs O(n^2) hypergraph,
                    with this project's own n marked on the curve
 
 Designed for a live screen-recorded demo: everything renders locally,
@@ -116,7 +116,7 @@ class ReportService:
                         f"{ms:.2f} ms", ha="center", va="bottom", fontsize=9.5,
                         fontweight="bold")
         ax.set_ylabel("Resolution time (ms, median)", fontsize=10)
-        ax.set_title(f"Solver speed  —  {n_packages} packages in this project",
+        ax.set_title(f"Solver speed, {n_packages} packages in this project",
                      fontsize=11, fontweight="bold")
         ax.grid(axis="y", color="#dddddd", linewidth=0.7, zorder=0)
         for spine in ["top", "right"]:
@@ -163,8 +163,8 @@ class ReportService:
         hg_curve = n_range.astype(float) ** 2
 
         fig, ax = plt.subplots(figsize=(7, 4.6), num="3. Complexity")
-        ax.plot(n_range, bt_curve, color="#B5533C", lw=2, label=f"Naive backtracking — O(v$^n$), v≈{v}")
-        ax.plot(n_range, hg_curve, color="#2F8F5B", lw=2, label="Hypergraph — O(n²)")
+        ax.plot(n_range, bt_curve, color="#B5533C", lw=2, label=f"Naive backtracking, O(v$^n$), v≈{v}")
+        ax.plot(n_range, hg_curve, color="#2F8F5B", lw=2, label="Hypergraph, O(n²)")
         ax.set_yscale("log")
 
         ax.axvline(n_packages, color="#555", lw=1, ls="--")

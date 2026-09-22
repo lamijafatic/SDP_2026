@@ -16,7 +16,7 @@ def run(args):
 
     print()
     if not issues:
-        print(c("  All checks passed — project is healthy!", bold("") + ""))
+        print(c("  All checks passed, project is healthy!", bold("") + ""))
         print(ok("Project is ready to use"))
     else:
         print(warn(f"{len(issues)} issue(s) found."))

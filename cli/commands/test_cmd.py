@@ -1,5 +1,5 @@
 """
-vertex test — run the full resolver benchmark and generate comparison plots.
+vertex test, run the full resolver benchmark and generate comparison plots.
 
 Runs all three solvers (Hypergraph, SAT, Backtracking) across all scenario
 categories, prints detailed per-scenario tables, a summary, and saves a
@@ -26,7 +26,7 @@ def run(args):
     if quick:
         mode = "diamond"
         runs = 5
-        print(c("  Quick mode — diamond conflicts only, 5 runs per strategy.", DIM))
+        print(c("  Quick mode, diamond conflicts only, 5 runs per strategy.", DIM))
         print(c("  (Run without --quick for the full suite.)\n", DIM))
     else:
         print(c(f"  Mode: {mode}   ·   Runs per strategy: {runs}", DIM))
@@ -49,7 +49,7 @@ def run(args):
     all_entries = []
 
     if mode in ("real", "all"):
-        print(c("  ── Real PyPI scenarios (local cache — no network required) ──", BOLD))
+        print(c("  ── Real PyPI scenarios (local cache, no network required) ──", BOLD))
         all_entries += run_real(runs)
 
     if mode in ("synthetic", "all"):

@@ -1,5 +1,5 @@
 """
-vertex demo — interactive algorithm walkthrough.
+vertex demo, interactive algorithm walkthrough.
 
 Walks the user through the two-phase hypergraph dependency resolution
 algorithm using a concrete diamond-conflict example.
@@ -30,8 +30,8 @@ def _show_menu(auto, _p):
     print(c("  Explore the hypergraph dependency resolution algorithm.\n", DIM))
 
     choice = menu_prompt([
-        "Algorithm walkthrough  — step through a diamond conflict, live",
-        "Efficiency stats       — run the live benchmark  (vertex stat)",
+        "Algorithm walkthrough, step through a diamond conflict, live",
+        "Efficiency stats, run the live benchmark  (vertex stat)",
         "Exit",
     ])
 
@@ -131,7 +131,7 @@ def _walkthrough(auto, _p):
 
     print()
     print(c("  The conflict: if both analytics@2.0 AND mailer@2.0 are selected,", DIM))
-    print(c("  crypto must satisfy >=3.0 AND <3.0 at the same time — impossible.", DIM))
+    print(c("  crypto must satisfy >=3.0 AND <3.0 at the same time, impossible.", DIM))
     print()
     print(c("  A backtracker discovers this only after exhausting all combinations.", DIM))
     print(c("  The hypergraph resolver identifies it from the graph structure.\n", DIM))
@@ -149,7 +149,7 @@ def _walkthrough(auto, _p):
     total_v   = len(H.V)
 
     print()
-    print(c("  Nodes V — one per (package, version) pair:\n", DIM))
+    print(c("  Nodes V, one per (package, version) pair:\n", DIM))
 
     pkg_groups = {}
     for p in H.V:
@@ -164,7 +164,7 @@ def _walkthrough(auto, _p):
 
     print()
     print(c(f"  {total_v} nodes total  →  full version space\n", DIM))
-    print(c("  Hyperedges E — each edge encodes one dependency constraint:\n", DIM))
+    print(c("  Hyperedges E, each edge encodes one dependency constraint:\n", DIM))
 
     for e in sorted(dep_edges, key=lambda x: (next(iter(x.source)).name, next(iter(x.source)).version)):
         src   = next(iter(e.source))
@@ -206,7 +206,7 @@ def _walkthrough(auto, _p):
     _p()
 
     # ── Step 4 ─────────────────────────────────────────────────────────────────
-    step_header(4, STEPS, "Phase A  —  SAT on Role Classes")
+    step_header(4, STEPS, "Phase A, SAT on Role Classes")
 
     role_deps, role_conflicts = build_role_graph(H, roles)
 
@@ -216,7 +216,7 @@ def _walkthrough(auto, _p):
     for rc in roles:
         name_to_rids.setdefault(rc.pkg_name, []).append(rc.id)
 
-    print(c("  Clause 1 — at-least-one per required package:\n", DIM))
+    print(c("  Clause 1, at-least-one per required package:\n", DIM))
     for name in sorted(required):
         rids   = name_to_rids.get(name, [])
         clause = "  ∨  ".join(c(f"x[{r}]", BRIGHT_CYAN) for r in rids)
@@ -224,7 +224,7 @@ def _walkthrough(auto, _p):
 
     if any(role_deps.values()):
         print()
-        print(c("  Clause 2 — dep propagation (if RC active, its targets must be active):\n", DIM))
+        print(c("  Clause 2, dep propagation (if RC active, its targets must be active):\n", DIM))
         for rc in sorted(roles, key=lambda r: r.id):
             for tid_set in role_deps.get(rc.id, []):
                 active = sorted(tid_set)
@@ -236,11 +236,11 @@ def _walkthrough(auto, _p):
     sp.start()
     selected_ids = phase_a_solve(roles, role_deps, role_conflicts, required, blocked=set())
     sp.stop(success=selected_ids is not None,
-            msg="SAT — skeleton found" if selected_ids is not None else "UNSAT")
+            msg="SAT, skeleton found" if selected_ids is not None else "UNSAT")
 
     if selected_ids is None:
         print()
-        print(warn("Phase A: UNSAT — constraints are fundamentally unsatisfiable."))
+        print(warn("Phase A: UNSAT, constraints are fundamentally unsatisfiable."))
         return
 
     print()
@@ -251,12 +251,12 @@ def _walkthrough(auto, _p):
             print(f"    {c(f'RC[{rc.id}]', BRIGHT_GREEN)}  {c(rc.pkg_name, BRIGHT_WHITE):<14}  [{mems}]")
 
     print()
-    print(c("  Phase A does not pick specific versions — it picks role classes.", DIM))
+    print(c("  Phase A does not pick specific versions, it picks role classes.", DIM))
     print(c("  Phase B chooses concrete versions within this skeleton.\n", DIM))
     _p()
 
     # ── Step 5 ─────────────────────────────────────────────────────────────────
-    step_header(5, STEPS, "Phase B  —  Concrete Version Selection")
+    step_header(5, STEPS, "Phase B, Concrete Version Selection")
 
     print(c("  Packages are processed in topological order (leaves first).", DIM))
     print(c("  Each package tries its newest version first.", DIM))
@@ -268,13 +268,13 @@ def _walkthrough(auto, _p):
     attempt_log = [
         # (package, version, ok, explanation)
         ("crypto",    "4.0", True,
-         "no constraints yet — starting newest"),
+         "no constraints yet, starting newest"),
         ("analytics", "2.0", True,
          "backward: web-app not assigned yet  |  forward: crypto 4.0 ≥ 3.0  ✔"),
         ("mailer",    "2.0", False,
          "backward: crypto 4.0 violates <3.0 constraint  ✘"),
         ("mailer",    "1.0", True,
-         "no crypto dependency — no conflict  ✔"),
+         "no crypto dependency, no conflict  ✔"),
         ("web-app",   "1.0", True,
          "analytics 2.0 ≥1.0 ✔  |  mailer 1.0 ≥1.0 ✔"),
     ]

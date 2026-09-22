@@ -34,7 +34,7 @@ def run(args):
         for name, constraint in deps.items():
             resolved = locked.get(name)
             status = c("✔ resolved", BRIGHT_GREEN) if resolved else c("? pending", BRIGHT_YELLOW)
-            rows.append([name, constraint, resolved or c("—", DIM), status])
+            rows.append([name, constraint, resolved or c(", ", DIM), status])
         print(c("  Dependencies:", DIM))
         table(["Package", "Constraint", "Locked Version", "Status"], rows)
     else:
@@ -43,13 +43,13 @@ def run(args):
 
     # Lock file
     if lock_svc.exists():
-        print(ok(f"Lock file (mypm.lock) — {len(locked)} packages pinned"))
+        print(ok(f"Lock file (mypm.lock), {len(locked)} packages pinned"))
     else:
-        print(err("Lock file missing — run 'vertex resolve'"))
+        print(err("Lock file missing, run 'vertex resolve'"))
 
     # Environment
     if env_svc.exists():
-        print(ok(f"Virtual environment (.mypm/venv) — ready"))
+        print(ok(f"Virtual environment (.mypm/venv), ready"))
         installed = env_svc.list_installed()
         if locked:
             missing = [p for p in locked if not any(i[0].lower() == p.lower() for i in installed)]
@@ -58,7 +58,7 @@ def run(args):
             else:
                 print(ok(f"  All {len(locked)} packages are installed"))
     else:
-        print(err("Virtual environment missing — run 'vertex install'"))
+        print(err("Virtual environment missing, run 'vertex install'"))
 
     print()
     return 0

@@ -41,7 +41,7 @@ def ok(label):
     print(f"  [PASS] {label}")
 
 def fail(label, detail=""):
-    print(f"  [FAIL] {label}" + (f" — {detail}" if detail else ""))
+    print(f"  [FAIL] {label}" + (f", {detail}" if detail else ""))
     sys.exit(1)
 
 def check(cond, label, detail=""):
@@ -119,10 +119,10 @@ def test_compute_role_classes():
     check(b_roles[0].members[0].version == "2.0", "B role class newest-first (2.0 first)")
 
 
-# ─── Test 3: phase_a_solve — simple satisfiable case ─────────────────────────
+# ─── Test 3: phase_a_solve, simple satisfiable case ─────────────────────────
 
 def test_phase_a_simple():
-    print("Test 3: phase_a_solve — satisfiable")
+    print("Test 3: phase_a_solve, satisfiable")
     graph = StubGraph(
         deps=["A", "B"],
         candidates={
@@ -146,10 +146,10 @@ def test_phase_a_simple():
     check("B" in selected_names, "B is selected")
 
 
-# ─── Test 4: phase_a_solve — unsatisfiable (all blocked) ─────────────────────
+# ─── Test 4: phase_a_solve, unsatisfiable (all blocked) ─────────────────────
 
 def test_phase_a_unsat():
-    print("Test 4: phase_a_solve — unsatisfiable when all role classes blocked")
+    print("Test 4: phase_a_solve, unsatisfiable when all role classes blocked")
     graph = StubGraph(
         deps=["A"],
         candidates={"A": [Version("1.0")]},
@@ -165,7 +165,7 @@ def test_phase_a_unsat():
     check(result is None, "Phase A returns None when all candidates are blocked")
 
 
-# ─── Test 5: full solve_phased — linear dep chain ────────────────────────────
+# ─── Test 5: full solve_phased, linear dep chain ────────────────────────────
 
 def _satisfies(solution, graph):
     """Return True if solution satisfies all inter-package constraints."""
@@ -178,7 +178,7 @@ def _satisfies(solution, graph):
 
 
 def test_solve_phased_chain():
-    print("Test 5: solve_phased — A depends on B depends on C")
+    print("Test 5: solve_phased, A depends on B depends on C")
     graph = StubGraph(
         deps=["A"],
         candidates={
@@ -219,10 +219,10 @@ def test_solve_phased_chain():
     )
 
 
-# ─── Test 6: solve_phased — constraint forces older version ───────────────────
+# ─── Test 6: solve_phased, constraint forces older version ───────────────────
 
 def test_solve_phased_constraint():
-    print("Test 6: solve_phased — tight constraint forces specific version")
+    print("Test 6: solve_phased, tight constraint forces specific version")
     graph = StubGraph(
         deps=["A"],
         candidates={
@@ -243,10 +243,10 @@ def test_solve_phased_constraint():
     check(solution.get("B") == "1.0", f"B constrained to 1.0, got {solution.get('B')}")
 
 
-# ─── Test 7: solve_phased — conflict between two packages ─────────────────────
+# ─── Test 7: solve_phased, conflict between two packages ─────────────────────
 
 def test_solve_phased_conflict():
-    print("Test 7: solve_phased — explicit conflict pair via repo")
+    print("Test 7: solve_phased, explicit conflict pair via repo")
 
     class StubRepo:
         def get_conflicts(self):
@@ -274,17 +274,17 @@ def test_solve_phased_conflict():
     solution = solve_phased(H, graph, {"A"})
 
     check(solution is not None, "solve_phased finds a solution despite conflict")
-    # B@2.0 conflicts with C@1.0 — so B must fall back to 1.0
+    # B@2.0 conflicts with C@1.0, so B must fall back to 1.0
     check(
         not (solution.get("B") == "2.0" and solution.get("C") == "1.0"),
         f"conflict pair B@2.0 + C@1.0 not selected together (got B={solution.get('B')}, C={solution.get('C')})",
     )
 
 
-# ─── Test 8: solve_phased — unsatisfiable returns None ───────────────────────
+# ─── Test 8: solve_phased, unsatisfiable returns None ───────────────────────
 
 def test_solve_phased_unsat():
-    print("Test 8: solve_phased — truly unsatisfiable returns None")
+    print("Test 8: solve_phased, truly unsatisfiable returns None")
     graph = StubGraph(
         deps=["A"],
         candidates={
@@ -316,7 +316,7 @@ if __name__ == "__main__":
     ]
 
     print("=" * 55)
-    print("Hypergraph Resolution Model — Test Suite")
+    print("Hypergraph Resolution Model, Test Suite")
     print("=" * 55)
     passed = 0
     for t in tests:

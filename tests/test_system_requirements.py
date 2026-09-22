@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """
-System Requirements Tests — Vertex Package Manager
-Covers FR1.1 – FR4.2 from the functional requirements specification.
-
+System Requirements Tests Vertex Package Managerd9b
 Run from the project root:
     python -m pytest tests/test_system_requirements.py -v
 """
@@ -43,13 +41,13 @@ def init_project(base_dir, name="testproject"):
 
 
 # ─────────────────────────────────────────────────────────────────
-# FR1 — Project Management
+# FR1, Project Management
 # ─────────────────────────────────────────────────────────────────
 
 class TestFR1_ProjectManagement(unittest.TestCase):
 
     def test_FR1_1_init_creates_config_file(self):
-        """FR1.1 — vertex init creates mypm.toml inside the new project directory"""
+        """FR1.1, vertex init creates mypm.toml inside the new project directory"""
         with tempfile.TemporaryDirectory() as base:
             project_dir = init_project(base)
             self.assertTrue(
@@ -58,7 +56,7 @@ class TestFR1_ProjectManagement(unittest.TestCase):
             )
 
     def test_FR1_1_init_python_version_stored(self):
-        """FR1.1 — vertex init --python stores the specified Python version in mypm.toml"""
+        """FR1.1, vertex init --python stores the specified Python version in mypm.toml"""
         with tempfile.TemporaryDirectory() as base:
             run_vertex("init", "myproject", "--python", "3.11", cwd=base)
             project_dir = os.path.join(base, "myproject")
@@ -68,7 +66,7 @@ class TestFR1_ProjectManagement(unittest.TestCase):
                          "Python version not recorded in mypm.toml")
 
     def test_FR1_2_info_returns_project_data(self):
-        """FR1.2 — vertex info exits successfully and produces output"""
+        """FR1.2, vertex info exits successfully and produces output"""
         with tempfile.TemporaryDirectory() as base:
             project_dir = init_project(base)
             result = run_vertex("info", cwd=project_dir)
@@ -78,7 +76,7 @@ class TestFR1_ProjectManagement(unittest.TestCase):
                               "vertex info produced no output")
 
     def test_FR1_3_status_exits_successfully(self):
-        """FR1.3 — vertex status shows full project and environment status"""
+        """FR1.3, vertex status shows full project and environment status"""
         with tempfile.TemporaryDirectory() as base:
             project_dir = init_project(base)
             result = run_vertex("status", cwd=project_dir)
@@ -86,7 +84,7 @@ class TestFR1_ProjectManagement(unittest.TestCase):
                              f"vertex status failed:\n{result.stderr}")
 
     def test_FR1_4_doctor_exits_successfully(self):
-        """FR1.4 — vertex doctor runs a health check and reports project status"""
+        """FR1.4, vertex doctor runs a health check and reports project status"""
         with tempfile.TemporaryDirectory() as base:
             project_dir = init_project(base)
             result = run_vertex("doctor", cwd=project_dir)
@@ -98,7 +96,7 @@ class TestFR1_ProjectManagement(unittest.TestCase):
                               "vertex doctor produced no output")
 
     def test_FR1_5_import_requirements_txt(self):
-        """FR1.5 — vertex import reads requirements.txt and adds deps to mypm.toml"""
+        """FR1.5, vertex import reads requirements.txt and adds deps to mypm.toml"""
         with tempfile.TemporaryDirectory() as base:
             project_dir = init_project(base)
             with open(os.path.join(project_dir, "requirements.txt"), "w") as f:
@@ -112,7 +110,7 @@ class TestFR1_ProjectManagement(unittest.TestCase):
                          "'requests' not found in mypm.toml after import")
 
     def test_FR1_6_import_pyproject_toml_pep621(self):
-        """FR1.6 — import supports pyproject.toml (PEP 621 format)"""
+        """FR1.6, import supports pyproject.toml (PEP 621 format)"""
         with tempfile.TemporaryDirectory() as base:
             project_dir = init_project(base)
             with open(os.path.join(project_dir, "pyproject.toml"), "w") as f:
@@ -128,7 +126,7 @@ class TestFR1_ProjectManagement(unittest.TestCase):
             self.assertIn("requests", content)
 
     def test_FR1_6_import_requirements_in(self):
-        """FR1.6 — import supports requirements.in format"""
+        """FR1.6, import supports requirements.in format"""
         with tempfile.TemporaryDirectory() as base:
             project_dir = init_project(base)
             with open(os.path.join(project_dir, "requirements.in"), "w") as f:
@@ -138,7 +136,7 @@ class TestFR1_ProjectManagement(unittest.TestCase):
                              f"import of requirements.in failed:\n{result.stderr}")
 
     def test_FR1_6_import_pipfile(self):
-        """FR1.6 — import supports Pipfile format"""
+        """FR1.6, import supports Pipfile format"""
         with tempfile.TemporaryDirectory() as base:
             project_dir = init_project(base)
             with open(os.path.join(project_dir, "Pipfile"), "w") as f:
@@ -148,7 +146,7 @@ class TestFR1_ProjectManagement(unittest.TestCase):
                              f"import of Pipfile failed:\n{result.stderr}")
 
     def test_FR1_7_pip_freeze_detected_and_converted(self):
-        """FR1.7 — pip-freeze style files detected and user is prompted for handling choice"""
+        """FR1.7, pip-freeze style files detected and user is prompted for handling choice"""
         with tempfile.TemporaryDirectory() as base:
             project_dir = init_project(base)
             # >80 % of lines use == → classified as pip-freeze style
@@ -171,7 +169,7 @@ class TestFR1_ProjectManagement(unittest.TestCase):
 
 
 # ─────────────────────────────────────────────────────────────────
-# FR2 — Dependency Management
+# FR2, Dependency Management
 # ─────────────────────────────────────────────────────────────────
 
 class TestFR2_DependencyManagement(unittest.TestCase):
@@ -184,7 +182,7 @@ class TestFR2_DependencyManagement(unittest.TestCase):
         shutil.rmtree(self.base, ignore_errors=True)
 
     def test_FR2_1_add_dependency_with_constraint(self):
-        """FR2.1 — vertex add writes dependency and constraint to mypm.toml"""
+        """FR2.1, vertex add writes dependency and constraint to mypm.toml"""
         result = run_vertex("add", "requests", ">=2.0", cwd=self.project_dir)
         self.assertEqual(result.returncode, 0,
                          f"vertex add failed:\n{result.stderr}")
@@ -194,7 +192,7 @@ class TestFR2_DependencyManagement(unittest.TestCase):
                      "'requests' not in mypm.toml after add")
 
     def test_FR2_1_add_uses_default_constraint_when_omitted(self):
-        """FR2.1 — vertex add uses default constraint (>=0.1) when none is given"""
+        """FR2.1, vertex add uses default constraint (>=0.1) when none is given"""
         result = run_vertex("add", "flask", cwd=self.project_dir)
         self.assertEqual(result.returncode, 0,
                          f"vertex add without constraint failed:\n{result.stderr}")
@@ -203,7 +201,7 @@ class TestFR2_DependencyManagement(unittest.TestCase):
         self.assertIn("flask", content)
 
     def test_FR2_2_remove_dependency(self):
-        """FR2.2 — vertex remove deletes the dependency from mypm.toml"""
+        """FR2.2, vertex remove deletes the dependency from mypm.toml"""
         run_vertex("add", "certifi", ">=2020.0", cwd=self.project_dir)
         result = run_vertex("remove", "certifi", cwd=self.project_dir)
         self.assertEqual(result.returncode, 0,
@@ -214,7 +212,7 @@ class TestFR2_DependencyManagement(unittest.TestCase):
                         "'certifi' still in mypm.toml after remove")
 
     def test_FR2_3_show_lists_all_declared_dependencies(self):
-        """FR2.3 — vertex show lists every declared dependency"""
+        """FR2.3, vertex show lists every declared dependency"""
         run_vertex("add", "certifi", ">=2020.0", cwd=self.project_dir)
         result = run_vertex("show", cwd=self.project_dir)
         self.assertEqual(result.returncode, 0,
@@ -223,7 +221,7 @@ class TestFR2_DependencyManagement(unittest.TestCase):
                      "'certifi' not shown in vertex show output")
 
     def test_FR2_4_update_runs_without_error(self):
-        """FR2.4 — vertex update completes without error"""
+        """FR2.4, vertex update completes without error"""
         run_vertex("add", "certifi", ">=2020.0", cwd=self.project_dir)
         result = run_vertex("update", cwd=self.project_dir)
         self.assertEqual(result.returncode, 0,
@@ -231,7 +229,7 @@ class TestFR2_DependencyManagement(unittest.TestCase):
 
 
 # ─────────────────────────────────────────────────────────────────
-# FR3 — Dependency Resolution
+# FR3, Dependency Resolution
 # ─────────────────────────────────────────────────────────────────
 
 class TestFR3_Resolution(unittest.TestCase):
@@ -245,7 +243,7 @@ class TestFR3_Resolution(unittest.TestCase):
         shutil.rmtree(self.base, ignore_errors=True)
 
     def test_FR3_1_resolve_default_hypergraph(self):
-        """FR3.1 — vertex resolve uses hypergraph solver and creates mypm.lock"""
+        """FR3.1, vertex resolve uses hypergraph solver and creates mypm.lock"""
         result = run_vertex("resolve", cwd=self.project_dir)
         self.assertEqual(result.returncode, 0,
                          f"vertex resolve failed:\n{result.stderr}")
@@ -255,45 +253,45 @@ class TestFR3_Resolution(unittest.TestCase):
         )
 
     def test_FR3_2_resolve_strategy_hypergraph(self):
-        """FR3.2 — vertex resolve --strategy hypergraph succeeds"""
+        """FR3.2, vertex resolve --strategy hypergraph succeeds"""
         result = run_vertex("resolve", "--strategy", "hypergraph", cwd=self.project_dir)
         self.assertEqual(result.returncode, 0,
                          f"hypergraph strategy failed:\n{result.stderr}")
 
     def test_FR3_2_resolve_strategy_sat(self):
-        """FR3.2 — vertex resolve --strategy sat succeeds"""
+        """FR3.2, vertex resolve --strategy sat succeeds"""
         result = run_vertex("resolve", "--strategy", "sat", cwd=self.project_dir)
         self.assertEqual(result.returncode, 0,
                          f"SAT strategy failed:\n{result.stderr}")
 
     def test_FR3_2_resolve_strategy_backtracking(self):
-        """FR3.2 — vertex resolve --strategy backtracking succeeds"""
+        """FR3.2, vertex resolve --strategy backtracking succeeds"""
         result = run_vertex("resolve", "--strategy", "backtracking", cwd=self.project_dir)
         self.assertEqual(result.returncode, 0,
                          f"backtracking strategy failed:\n{result.stderr}")
 
     def test_FR3_3_lock_regenerates_lockfile(self):
-        """FR3.3 — vertex lock regenerates mypm.lock"""
+        """FR3.3, vertex lock regenerates mypm.lock"""
         result = run_vertex("lock", cwd=self.project_dir)
         self.assertEqual(result.returncode, 0,
                          f"vertex lock failed:\n{result.stderr}")
         self.assertTrue(os.path.exists(os.path.join(self.project_dir, "mypm.lock")))
 
     def test_FR3_4_explain_after_resolve(self):
-        """FR3.4 — vertex explain shows version selection rationale"""
+        """FR3.4, vertex explain shows version selection rationale"""
         run_vertex("resolve", cwd=self.project_dir)
         result = run_vertex("explain", cwd=self.project_dir)
         self.assertEqual(result.returncode, 0,
                          f"vertex explain failed:\n{result.stderr}")
 
     def test_FR3_5_conflicts_exits_successfully(self):
-        """FR3.5 — vertex conflicts lists known registry conflicts"""
+        """FR3.5, vertex conflicts lists known registry conflicts"""
         result = run_vertex("conflicts", cwd=self.project_dir)
         self.assertEqual(result.returncode, 0,
                          f"vertex conflicts failed:\n{result.stderr}")
 
     def test_FR3_6_unsat_returns_none(self):
-        """FR3.6 — solver returns None when two required packages are in direct conflict"""
+        """FR3.6, solver returns None when two required packages are in direct conflict"""
         from model_math_trans import (
             HyperGraph, Package, Hyperedge, solve_phased
         )
@@ -327,14 +325,14 @@ class TestFR3_Resolution(unittest.TestCase):
         )
 
     def test_FR3_7_diamond_conflict_resolved(self):
-        """FR3.7 — diamond dependency conflict resolved correctly (vertex demo --auto)"""
+        """FR3.7, diamond dependency conflict resolved correctly (vertex demo --auto)"""
         result = run_vertex("demo", "--auto", cwd=self.project_dir)
         self.assertEqual(result.returncode, 0,
                          f"vertex demo --auto failed:\n{result.stderr}")
 
 
 # ─────────────────────────────────────────────────────────────────
-# FR4 — Environment Management
+# FR4, Environment Management
 # ─────────────────────────────────────────────────────────────────
 
 class TestFR4_Environment(unittest.TestCase):
@@ -349,13 +347,13 @@ class TestFR4_Environment(unittest.TestCase):
         shutil.rmtree(self.base, ignore_errors=True)
 
     def test_FR4_1_install_packages_into_venv(self):
-        """FR4.1 — vertex install installs packages from lock file into virtual environment"""
+        """FR4.1, vertex install installs packages from lock file into virtual environment"""
         result = run_vertex("install", cwd=self.project_dir)
         self.assertEqual(result.returncode, 0,
                          f"vertex install failed:\n{result.stderr}")
 
     def test_FR4_2_install_dry_run_does_not_install(self):
-        """FR4.2 — vertex install --dry-run previews packages without installing"""
+        """FR4.2, vertex install --dry-run previews packages without installing"""
         result = run_vertex("install", "--dry-run", cwd=self.project_dir)
         self.assertEqual(result.returncode, 0,
                          f"vertex install --dry-run failed:\n{result.stderr}")

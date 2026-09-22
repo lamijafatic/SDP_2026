@@ -13,7 +13,7 @@ def run(args):
 
     env_svc = EnvironmentService()
     if not env_svc.exists():
-        print(info("No virtual environment found — nothing to clean."))
+        print(info("No virtual environment found, nothing to clean."))
         return 0
 
     print(warn("This will delete the .mypm/venv directory."))
